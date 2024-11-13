@@ -3,20 +3,17 @@ from pygame.locals import *
 
 
 
-class Asteroids : 
-    def __init__(self) : 
-        self.asteroids_min_size = 10 
-        self.asteroids_max_size = 40 
-        self.asteroids_min_speed = 1 
-        self.asteroids_max_speed = 8 
+class Asteroids (): 
+    asteroids_min_size = 10 
+    asteroids_max_size = 40
+    asteroids_min_speed = 1 
+    asteroids_max_speed = 8 
 
-
-def CreateNewAsteroids() : 
-    asteroids_add_counter = 0
-    asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
-    newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
-    print(newAsteroid)
-    asteroids.append(newAsteroid)
+    def CreateNewAsteroids() : 
+        asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
+        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
+        print(newAsteroid)
+        asteroids.append(newAsteroid)
 
 def MoveAsteroids () :
     for a in asteroids:
@@ -172,8 +169,8 @@ while True:
         # Add new baddies at the top of the screen, if needed.
         if not reverseCheat and not slowCheat:
             asteroids_add_counter += 1 
-            if asteroids_add_counter == add_new_asteroid_rate :
-                CreateNewAsteroids()
+            if len(asteroids) < add_new_asteroid_rate :
+                Asteroids.CreateNewAsteroids()
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -187,7 +184,7 @@ while True:
         
         #Move the asteroids down : 
         MoveAsteroids()
-        
+
         # Delete the asteroids : 
         DeleteAsteroids()
 
