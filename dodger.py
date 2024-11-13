@@ -13,7 +13,6 @@ class Asteroids ():
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
         newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
         print(newAsteroid)
-        print("HELLPPPPPPP")
         a_list.append(newAsteroid)
         return a_list
 
@@ -30,14 +29,19 @@ def DeleteAsteroids(asteroids_list2) :
     for a in asteroids_list2[:] :
         if a['rect'].top > WINDOWHEIGHT:
             asteroids_list2.remove(a)
+    return asteroids_list2
 
 
 def PlayerHasHitAsteroid(playerRect, asteroids_list) : 
-    for a in asteroids_list:
-        if playerRect.colliderect(a['rect']):
+    counter = 0 
+    print(len(asteroids_list))
+    while counter < len(asteroids_list) : 
+        counter += 1 
+        if playerRect.colliderect(asteroids_list[counter-1]['rect']):
             return True 
         else : 
             return False
+        
     
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
@@ -123,7 +127,6 @@ while True:
 
     while True: # The game loop runs while the game part is playing.
         score += 1 # Increase score.
-        print(score)
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -172,10 +175,8 @@ while True:
                 playerRect.centery = event.pos[1]
 
         # Add new baddies at the top of the screen, if needed.
-        if not reverseCheat and not slowCheat:
-            asteroids_add_counter += 1 
-            if len(asteroids) < add_new_asteroid_rate :
-               asteroids = Asteroids.CreateNewAsteroids(asteroids)
+        if len(asteroids) <= add_new_asteroid_rate :
+            asteroids = Asteroids.CreateNewAsteroids(asteroids)
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -191,7 +192,8 @@ while True:
         MoveAsteroids(asteroids)
 
         # Delete the asteroids : 
-        DeleteAsteroids(asteroids)
+        asteroids = DeleteAsteroids(asteroids)
+
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
