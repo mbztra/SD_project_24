@@ -9,14 +9,16 @@ class Asteroids ():
     asteroids_min_speed = 1 
     asteroids_max_speed = 8 
 
-    def CreateNewAsteroids() : 
+    def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
         newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
         print(newAsteroid)
-        asteroids.append(newAsteroid)
+        print("HELLPPPPPPP")
+        a_list.append(newAsteroid)
+        return a_list
 
-def MoveAsteroids () :
-    for a in asteroids:
+def MoveAsteroids (a_list2) :
+    for a in a_list2:
         if not reverseCheat and not slowCheat:
             a['rect'].move_ip(0, a['speed'])
         elif reverseCheat:
@@ -24,16 +26,18 @@ def MoveAsteroids () :
         elif slowCheat:
             a['rect'].move_ip(0, 1)
     
-def DeleteAsteroids() :
-    for a in asteroids[:]:
+def DeleteAsteroids(asteroids_list2) :
+    for a in asteroids_list2[:] :
         if a['rect'].top > WINDOWHEIGHT:
-            asteroids.remove(a)
+            asteroids_list2
 
-def PlayerHasHitAsteroid(playerRect, asteroids) : 
-    for a in asteroids:
+
+def PlayerHasHitAsteroid(playerRect, asteroids_list) : 
+    for a in asteroids_list:
         if playerRect.colliderect(a['rect']):
             return True 
-        return False
+        else : 
+            return False
     
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
@@ -119,6 +123,7 @@ while True:
 
     while True: # The game loop runs while the game part is playing.
         score += 1 # Increase score.
+        print(score)
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -170,7 +175,7 @@ while True:
         if not reverseCheat and not slowCheat:
             asteroids_add_counter += 1 
             if len(asteroids) < add_new_asteroid_rate :
-                Asteroids.CreateNewAsteroids()
+               asteroids = Asteroids.CreateNewAsteroids(asteroids)
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -183,10 +188,10 @@ while True:
             playerRect.move_ip(0, PLAYERMOVERATE)
         
         #Move the asteroids down : 
-        MoveAsteroids()
+        MoveAsteroids(asteroids)
 
         # Delete the asteroids : 
-        DeleteAsteroids()
+        DeleteAsteroids(asteroids)
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
