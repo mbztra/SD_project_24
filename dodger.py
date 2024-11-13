@@ -27,7 +27,7 @@ def MoveAsteroids () :
         elif slowCheat:
             a['rect'].move_ip(0, 1)
     
-def DeleteAsteroids() :
+def DeleteAsteroids(playerRect, asteroids) :
     for a in asteroids[:]:
         if a['rect'].top > WINDOWHEIGHT:
             asteroids.remove(a)
@@ -189,7 +189,7 @@ while True:
         MoveAsteroids()
         
         # Delete the asteroids : 
-        Asteroids.DeleteAsteroids
+        DeleteAsteroids()
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
