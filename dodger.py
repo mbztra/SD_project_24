@@ -29,7 +29,7 @@ def MoveAsteroids (a_list2) :
 def DeleteAsteroids(asteroids_list2) :
     for a in asteroids_list2[:] :
         if a['rect'].top > WINDOWHEIGHT:
-            asteroids_list2
+            asteroids_list2.remove(a)
 
 
 def PlayerHasHitAsteroid(playerRect, asteroids_list) : 
