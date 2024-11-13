@@ -17,14 +17,7 @@ class Asteroids :
                 return True 
             return False
 
-    def CreateNewAsteroids(self) : 
-        asteroids_add_counter = 0
-        asteroids_size = random.randint(self.asteroids_min_size, self.asteroids_max_size)
-        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size),
-                        'speed': random.randint(self.asteroids_min_speed, self.asteroids_max_speed),
-                        'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),
-                        }
-        asteroids.append(newAsteroid)
+
     
     def MoveAsteroids () : 
         for a in asteroids:
@@ -39,6 +32,16 @@ class Asteroids :
         for a in asteroids[:]:
             if a['rect'].top > WINDOWHEIGHT:
                 asteroids.remove(a)
+
+
+def CreateNewAsteroids() : 
+    if asteroids_add_counter == add_new_asteroid_rate :
+        asteroids_add_counter = 0
+        asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
+        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),
+                        }
+        print(newAsteroid)
+        asteroids.append(newAsteroid)
     
 
 
@@ -179,17 +182,8 @@ while True:
                 playerRect.centery = event.pos[1]
         # Add new baddies at the top of the screen, if needed.
         if not reverseCheat and not slowCheat:
-        #    baddieAddCounter += 1
             asteroids_add_counter += 1 
-        #if baddieAddCounter == ADDNEWBADDIERATE:
-        #    baddieAddCounter = 0
-        #    baddieSize = random.randint(BADDIEMINSIZE, BADDIEMAXSIZE)
-        #    newBaddie = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - baddieSize), 0 - baddieSize, baddieSize, baddieSize),
-        #                'speed': random.randint(BADDIEMINSPEED, BADDIEMAXSPEED),
-        #                'surface':pygame.transform.scale(baddieImage, (baddieSize, baddieSize)),
-        #                }
-
-        #    baddies.append(newBaddie)
+            CreateNewAsteroids()
 
         
         # Add new asteroids 
