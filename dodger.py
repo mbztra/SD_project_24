@@ -30,8 +30,6 @@ def DeleteAsteroids(asteroids_list2) :
         if a['rect'].top > WINDOWHEIGHT:
             asteroids_list2.remove(a)
     return asteroids_list2
-
-        
     
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
@@ -203,7 +201,8 @@ while True:
 
 
         #Check if any asteroids have hit the player : 
-        hit_check = False
+        hit_check = False 
+    
         for a in asteroids : 
             if playerRect.colliderect(a['rect']):
                 hit_check = True 
