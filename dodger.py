@@ -31,16 +31,6 @@ def DeleteAsteroids(asteroids_list2) :
             asteroids_list2.remove(a)
     return asteroids_list2
 
-
-def PlayerHasHitAsteroid(playerRect, asteroids_list) : 
-    counter = 0 
-    print(len(asteroids_list))
-    while counter < len(asteroids_list) : 
-        counter += 1 
-        if playerRect.colliderect(asteroids_list[counter-1]['rect']):
-            return True 
-        else : 
-            return False
         
     
 WINDOWWIDTH = 600
@@ -213,7 +203,12 @@ while True:
 
 
         #Check if any asteroids have hit the player : 
-        if PlayerHasHitAsteroid(playerRect, asteroids) : 
+        hit_check = False
+        for a in asteroids : 
+            if playerRect.colliderect(a['rect']):
+                hit_check = True 
+                
+        if hit_check : 
             if score > topScore : 
                 topScore = score 
             break 
