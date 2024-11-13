@@ -11,46 +11,33 @@ class Asteroids :
         self.asteroids_max_speed = 8 
 
 
-    def PlayerHasHitAsteroid(self, playerRect, asteroids) : 
-        for a in asteroids:
-            if playerRect.colliderect(a['rect']):
-                return True 
-            return False
-
-
-    
-    def MoveAsteroids () : 
-        for a in asteroids:
-                if not reverseCheat and not slowCheat:
-                    a['rect'].move_ip(0, a['speed'])
-                elif reverseCheat:
-                    a['rect'].move_ip(0, -5)
-                elif slowCheat:
-                    a['rect'].move_ip(0, 1)
-    
-    def DeleteAsteroids() :
-        for a in asteroids[:]:
-            if a['rect'].top > WINDOWHEIGHT:
-                asteroids.remove(a)
-
-
 def CreateNewAsteroids() : 
-    if asteroids_add_counter == add_new_asteroid_rate :
-        asteroids_add_counter = 0
-        asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
-        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),
-                        }
-        print(newAsteroid)
-        asteroids.append(newAsteroid)
+    asteroids_add_counter = 0
+    asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
+    newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
+    print(newAsteroid)
+    asteroids.append(newAsteroid)
+
+def MoveAsteroids () :
+    for a in asteroids:
+        if not reverseCheat and not slowCheat:
+            a['rect'].move_ip(0, a['speed'])
+        elif reverseCheat:
+            a['rect'].move_ip(0, -5)
+        elif slowCheat:
+            a['rect'].move_ip(0, 1)
     
+def DeleteAsteroids() :
+    for a in asteroids[:]:
+        if a['rect'].top > WINDOWHEIGHT:
+            asteroids.remove(a)
 
-
-
+def PlayerHasHitAsteroid(self, playerRect, asteroids) : 
+    for a in asteroids:
+        if playerRect.colliderect(a['rect']):
+            return True 
+        return False
     
-
-
-
-
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
@@ -63,6 +50,7 @@ BADDIEMAXSPEED = 8
 ADDNEWBADDIERATE = 6
 add_new_asteroid_rate = 6
 PLAYERMOVERATE = 5
+
 
 def terminate():
     pygame.quit()
@@ -126,9 +114,9 @@ while True:
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
-    #baddieAddCounter = 0
-
     asteroids_add_counter = 0 
+
+    
 
     pygame.mixer.music.play(-1, 0.0)
 
@@ -180,15 +168,12 @@ while True:
                 # If the mouse moves, move the player where to the cursor.
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
+
         # Add new baddies at the top of the screen, if needed.
         if not reverseCheat and not slowCheat:
             asteroids_add_counter += 1 
-            CreateNewAsteroids()
-
-        
-        # Add new asteroids 
-        if asteroids_add_counter == add_new_asteroid_rate : 
-            Asteroids.CreateNewAsteroids() 
+            if asteroids_add_counter == add_new_asteroid_rate :
+                CreateNewAsteroids()
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -199,23 +184,9 @@ while True:
             playerRect.move_ip(0, -1 * PLAYERMOVERATE)
         if moveDown and playerRect.bottom < WINDOWHEIGHT:
             playerRect.move_ip(0, PLAYERMOVERATE)
-
-        # Move the baddies down.
-        #for b in baddies:
-        #    if not reverseCheat and not slowCheat:
-        #        b['rect'].move_ip(0, b['speed'])
-        #    elif reverseCheat:
-        #        b['rect'].move_ip(0, -5)
-        #    elif slowCheat:
-        #        b['rect'].move_ip(0, 1)
         
         #Move the asteroids down : 
-        Asteroids.MoveAsteroids()
-
-        # Delete baddies that have fallen past the bottom.
-        #for b in baddies[:]:
-        #    if b['rect'].top > WINDOWHEIGHT:
-        #        baddies.remove(b)
+        MoveAsteroids()
         
         # Delete the asteroids : 
         Asteroids.DeleteAsteroids
@@ -229,10 +200,6 @@ while True:
 
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
-
-        # Draw each baddie.
-        #for b in baddies:
-        #    windowSurface.blit(b['surface'], b['rect'])
         
         # Draw each asteroid : 
         for a in asteroids : 
@@ -240,14 +207,9 @@ while True:
 
         pygame.display.update()
 
-        # Check if any of the baddies have hit the player.
-        #if playerHasHitBaddie(playerRect, baddies):
-        #    if score > topScore:
-        #        topScore = score # set new top score
-        #    break
 
         #Check if any asteroids have hit the player : 
-        if Asteroids.PlayerHasHitAsteroid(playerRect, asteroids) : 
+        if PlayerHasHitAsteroid(playerRect, asteroids) : 
             if score > topScore : 
                 topScore = score 
             break 
