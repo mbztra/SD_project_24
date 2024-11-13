@@ -27,12 +27,12 @@ def MoveAsteroids () :
         elif slowCheat:
             a['rect'].move_ip(0, 1)
     
-def DeleteAsteroids(playerRect, asteroids) :
+def DeleteAsteroids() :
     for a in asteroids[:]:
         if a['rect'].top > WINDOWHEIGHT:
             asteroids.remove(a)
 
-def PlayerHasHitAsteroid(self, playerRect, asteroids) : 
+def PlayerHasHitAsteroid(playerRect, asteroids) : 
     for a in asteroids:
         if playerRect.colliderect(a['rect']):
             return True 
