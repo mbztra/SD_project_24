@@ -1,12 +1,19 @@
 import pygame, random, sys
-WINDOWWIDTH = 600
-WINDOWHEIGHT = 600
-AsteroidImage = pygame.image.load(random.choice(['Asteroids.png','baddies2.png','baddies3.png']))
+from pygame.locals import *
+
+pygame.init()
+screen_info = pygame.display.Info() 
+WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
+
+AsteroidImage = pygame.image.load('Asteroids2.png')
+SpaceDroneImage = pygame.image.load('Space_Drones.png')
+AlienFighterImage = pygame.image.load('ALien_Fighter.png')
+BossShipImage = pygame.image.load('Boss-ship.png')
 reverseCheat = slowCheat = False
 
-class Asteroids (): 
-    asteroids_min_size = 10 
-    asteroids_max_size = 40  
+class Asteroids : 
+    asteroids_min_size = 20
+    asteroids_max_size = 80
     asteroids_min_speed = 1  
     asteroids_max_speed = 8
 
@@ -40,3 +47,73 @@ class Asteroids ():
                 return True
         return False
 
+class Space_Drones : 
+    space_drones_min_size = 10
+    space_drones_max_size = 50 
+    space_drones_min_speed = 2 
+    space_drones_max_speed = 10
+
+    def CreateNewSpaceDrones(a_list) : 
+        SpaceDrones_size = random.randint(Space_Drones.space_drones_min_size, Space_Drones.space_drones_max_size)
+        newSpaceDrone = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
+        print(newSpaceDrone)
+        a_list.append(newSpaceDrone)
+        return a_list
+    
+    def MoveSpaceDrones (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteSpaceDrones(spacedrones_list2) :
+        for a in spacedrones_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                spacedrones_list2.remove(a)
+        return spacedrones_list2
+    
+    def playerHasHitSpaceDrone(playerRect, spacedrones):
+        for a in spacedrones:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+
+
+class Alien_Fighters : 
+    fighters_min_size = 30
+    fighters_max_size = 90
+    fighters_min_speed = 5
+    fighters_max_speed = 15
+
+    def CreateNewFighter(a_list) : 
+        Fighter_size = random.randint(Alien_Fighters.fighters_min_size, Alien_Fighters.fighters_max_size)
+        newFighter = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Fighter_size), 0 - Fighter_size, Fighter_size, Fighter_size), 'speed': random.randint(Alien_Fighters.fighters_min_speed, Alien_Fighters.fighters_max_speed), 'surface':pygame.transform.scale(AlienFighterImage, (Fighter_size, Fighter_size)),}
+        print(newFighter)
+        a_list.append(newFighter)
+        return a_list
+    
+    def MoveFighter (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteFighter(fighters_list2) :
+        for a in fighters_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                fighters_list2.remove(a)
+        return fighters_list2
+    
+    def playerHasHitFighter(playerRect, fighters):
+        for a in fighters:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False

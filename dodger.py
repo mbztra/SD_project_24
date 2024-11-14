@@ -1,14 +1,18 @@
 import pygame, random, sys
 from pygame.locals import *
 from Asteroids_Class.Enemy_Class import Asteroids
+from Asteroids_Class.Enemy_Class import Space_Drones
+from Asteroids_Class.Enemy_Class import Alien_Fighters
 
-WINDOWWIDTH = 600
-WINDOWHEIGHT = 600
+
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERMOVERATE = 5
 add_new_asteroid_rate = 6
+add_new_spacedrone_rate = 8
+add_new_fighter_rate = 10
+LEVEL = 1
 
 
 def terminate():
@@ -35,6 +39,8 @@ def drawText(text, font, surface, x, y):
 # Set up pygame, the window, and the mouse cursor.
 pygame.init()
 mainClock = pygame.time.Clock()
+screen_info = pygame.display.Info() 
+WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 pygame.display.set_caption('Dodger')
 pygame.mouse.set_visible(False)
@@ -47,7 +53,7 @@ gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.mid')
 
 # Set up images.
-playerImage = pygame.image.load('player.png')
+playerImage = pygame.image.load('Main_character_resized.png')
 playerRect = playerImage.get_rect()
 
 # Show the "Start" screen.
@@ -61,16 +67,22 @@ topScore = 0
 while True:
     # Set up the start of the game.
     asteroids = []
+    spacedrones = []
+    fighters = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
-    baddieAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)
-    asteroids_add_counter = 0 
 
     while True: # The game loop runs while the game part is playing.
-        score += 1 # Increase score.
+        score += 5 # Increase score.
+        if score < 1000 : 
+            LEVEL = 1
+        elif score >= 1000 and score < 2000 : 
+           LEVEL = 2
+        elif score >= 2000 : 
+            LEVEL = 3 
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -119,8 +131,16 @@ while True:
                 playerRect.centery = event.pos[1]
 
         # Add new baddies at the top of the screen, if needed.
-        if len(asteroids) <= add_new_asteroid_rate :
-            asteroids = Asteroids.CreateNewAsteroids(asteroids)
+        if LEVEL == 1 : 
+            if len(asteroids) <= add_new_asteroid_rate :
+                asteroids = Asteroids.CreateNewAsteroids(asteroids)
+        elif LEVEL == 2 : 
+            if len(spacedrones) <= add_new_spacedrone_rate : 
+                spacedrones = Space_Drones.CreateNewSpaceDrones(spacedrones)
+        elif LEVEL == 3 : 
+            if len(fighters) <= add_new_fighter_rate : 
+                fighters = Alien_Fighters.CreateNewFighter(fighters)
+        
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -133,10 +153,23 @@ while True:
             playerRect.move_ip(0, PLAYERMOVERATE)
 
         # Move the baddies down.
-        asteroids = Asteroids.MoveAsteroids(asteroids)
+        if LEVEL == 1 : 
+            asteroids = Asteroids.MoveAsteroids(asteroids)
+        elif LEVEL == 2 : 
+            spacedrones = Space_Drones.MoveSpaceDrones(spacedrones)
+        elif LEVEL == 3 : 
+            fighters = Alien_Fighters.MoveFighter(fighters)
+        
 
         # Delete baddies that have fallen past the bottom.
-        asteroids = Asteroids.DeleteAsteroids(asteroids)
+        if LEVEL == 1 : 
+            asteroids = Asteroids.DeleteAsteroids(asteroids)
+        elif LEVEL == 2 : 
+            spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
+        elif LEVEL == 3 : 
+            fighters = Alien_Fighters.DeleteFighter(fighters)
+        
+        
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
@@ -149,16 +182,37 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each baddie.
-        for a in asteroids : 
-            windowSurface.blit(a['surface'], a['rect'])
+        if LEVEL == 1 : 
+            for a in asteroids : 
+              windowSurface.blit(a['surface'], a['rect'])
+        elif LEVEL == 2 : 
+            for a in spacedrones : 
+                windowSurface.blit(a['surface'], a['rect'])
+        elif LEVEL == 3 : 
+            for a in fighters :
+                windowSurface.blit(a['surface'], a['rect'])
+
             
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
-            if score > topScore : 
-                topScore = score 
-            break
+        if LEVEL == 1 : 
+            if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
+                if score > topScore : 
+                    topScore = score 
+                break
+        elif LEVEL == 2 : 
+            if Space_Drones.playerHasHitSpaceDrone(playerRect, spacedrones) : 
+                if score > topScore : 
+                    topScore = score 
+                break 
+        elif LEVEL == 3 : 
+            if Alien_Fighters.playerHasHitFighter(playerRect, fighters) : 
+                if score > topScore : 
+                    topScore = score 
+                break 
+
+    
 
         mainClock.tick(FPS)
 
