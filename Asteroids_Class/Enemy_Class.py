@@ -147,23 +147,29 @@ class Bullets :
                 bullet_list2.remove(a)
         return bullet_list2
     
-    def BulletHasHitFighter(bullets, fighters):
-        for a in fighters:
+    def BulletHasHitFighter(bullets, fighters, score):
+        for a in fighters[:] :
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     fighters.remove(a)
-        return fighters
+                    bullets.remove(b)
+                    score += 200
+        return bullets, fighters, score
     
-    def BulletHasHitAsteroids(bullets, asteroids) :
-        for a in asteroids :
+    def BulletHasHitAsteroids(bullets, asteroids, score) :
+        for a in asteroids[:] :
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     asteroids.remove(a)
-        return asteroids 
+                    bullets.remove(b)
+                    score += 50
+        return bullets, asteroids, score
     
-    def BulletHasHitDrones(bullets, spacedrones) : 
-        for a in spacedrones:
+    def BulletHasHitDrones(bullets, spacedrones, score) : 
+        for a in spacedrones[:] :
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     spacedrones.remove(a)
-        return spacedrones 
+                    bullets.remove(b)
+                    score += 100
+        return bullets, spacedrones, score 

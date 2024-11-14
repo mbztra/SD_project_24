@@ -245,11 +245,11 @@ while True:
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
         if LEVEL == 1 : 
-            asteroids = Bullets.BulletHasHitAsteroids(bullets, asteroids)
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
         elif LEVEL == 2 : 
-            spacedrones = Bullets.BulletHasHitDrones(bullets, spacedrones)
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
         elif LEVEL == 3 : 
-            fighters = Bullets.BulletHasHitFighter(bullets, fighters)
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
         
 
 
