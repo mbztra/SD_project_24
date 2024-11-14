@@ -15,6 +15,8 @@ add_new_fighter_rate = 20
 add_new_bullet_rate = 5 
 LEVEL = 0
 
+keys = pygame.key.get_pressed() 
+
 def terminate():
     pygame.quit()
     sys.exit()
@@ -125,6 +127,8 @@ while True:
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets)
                         print(len(bullets))
+
+
             if event.type == KEYUP:
                 if event.key == K_z:
                     reverseCheat = False
