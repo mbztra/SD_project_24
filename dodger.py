@@ -76,7 +76,10 @@ while True:
     pygame.mixer.music.play(-1, 0.0)
 
     while True: # The game loop runs while the game part is playing.
-        score += 5 # Increase score.
+        score += 1 # Increase score.
+
+        # The game defines on what level we are playing. 
+
         if score < 1000 : 
             LEVEL = 1
         elif score >= 1000 and score < 2000 : 
@@ -130,7 +133,8 @@ while True:
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
 
-        # Add new baddies at the top of the screen, if needed.
+        # Add new enemies at the top of the screen, if needed.
+        # It will check what level we are playing and will display the correct ennemies. 
         if LEVEL == 1 : 
             if len(asteroids) <= add_new_asteroid_rate :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
@@ -152,7 +156,8 @@ while True:
         if moveDown and playerRect.bottom < WINDOWHEIGHT:
             playerRect.move_ip(0, PLAYERMOVERATE)
 
-        # Move the baddies down.
+        # Move the enemies down.
+        # It checks what enemies to move according to the level. 
         if LEVEL == 1 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
         elif LEVEL == 2 : 
@@ -161,7 +166,8 @@ while True:
             fighters = Alien_Fighters.MoveFighter(fighters)
         
 
-        # Delete baddies that have fallen past the bottom.
+        # Delete ennemies that have fallen past the bottom.
+        # Once again, checks the level.
         if LEVEL == 1 : 
             asteroids = Asteroids.DeleteAsteroids(asteroids)
         elif LEVEL == 2 : 
@@ -181,7 +187,7 @@ while True:
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
 
-        # Draw each baddie.
+        # Draw each ennemy, according to the level.
         if LEVEL == 1 : 
             for a in asteroids : 
               windowSurface.blit(a['surface'], a['rect'])
@@ -195,7 +201,7 @@ while True:
             
         pygame.display.update()
 
-        # Check if any of the baddies have hit the player.
+        # Check if any of the ennemies have hit the player.
         if LEVEL == 1 : 
             if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
                 if score > topScore : 
