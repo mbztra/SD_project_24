@@ -3,7 +3,7 @@ from pygame.locals import *
 from Asteroids_Class.Enemy_Class import Asteroids
 from Asteroids_Class.Enemy_Class import Space_Drones
 from Asteroids_Class.Enemy_Class import Alien_Fighters
-
+from Asteroids_Class.Enemy_Class import Bullets
 
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -12,7 +12,8 @@ PLAYERMOVERATE = 5
 add_new_asteroid_rate = 10
 add_new_spacedrone_rate = 14
 add_new_fighter_rate = 20
-LEVEL = 1
+add_new_bullet_rate = 5 
+LEVEL = 0
 
 def terminate():
     pygame.quit()
@@ -39,6 +40,8 @@ def drawTitle(text, font, surface, x, y):
     textrect1 = textobj1.get_rect()
     textrect1.center = (x, y)
     surface.blit(textobj1, textrect1)
+
+mouse_pressed = pygame.mouse.get_pressed()
 
 
 # Set up pygame, the window, and the mouse cursor.
@@ -77,6 +80,7 @@ while True:
     asteroids = []
     spacedrones = []
     fighters = []
+    bullets = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
@@ -93,7 +97,8 @@ while True:
         elif score > 1000 and score < 2000 : 
            LEVEL = 2
         elif score > 2000 : 
-            LEVEL = 3 
+            LEVEL = 3
+
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -116,7 +121,10 @@ while True:
                 if event.key == K_DOWN or event.key == K_s:
                     moveUp = False
                     moveDown = True
-
+                if event.key == K_SPACE : 
+                    if len(bullets) <= add_new_bullet_rate : 
+                        bullets = Bullets.CreateNewBullet(playerRect, bullets)
+                        print(len(bullets))
             if event.type == KEYUP:
                 if event.key == K_z:
                     reverseCheat = False
@@ -172,7 +180,9 @@ while True:
             spacedrones = Space_Drones.MoveSpaceDrones(spacedrones)
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.MoveFighter(fighters)
-        
+
+        # Now moving the bullets.     
+        bullets = Bullets.MoveBullet(bullets)
 
         # Delete ennemies that have fallen past the bottom.
         # Once again, checks the level.
@@ -183,7 +193,8 @@ while True:
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.DeleteFighter(fighters)
         
-        
+        # Now deleting the bullets 
+        bullets = Bullets.DeleteBullet(bullets)
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
@@ -206,6 +217,11 @@ while True:
             for a in fighters :
                 windowSurface.blit(a['surface'], a['rect'])
 
+
+        # Drawing the Bullets 
+        for a in bullets : 
+            windowSurface.blit(a['surface'], a['rect'])
+
             
         pygame.display.update()
 
@@ -226,7 +242,10 @@ while True:
                     topScore = score 
                 break 
 
-    
+        #Check if any bullets have hit the enemies.
+        #fighters, asteroids, spacedrones = Bullets.BulletHasHitEnemy(bullets, fighters, asteroids, spacedrones)
+
+
 
         mainClock.tick(FPS)
 
