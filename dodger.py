@@ -7,8 +7,9 @@ WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
-add_new_asteroid_rate = 6
 PLAYERMOVERATE = 5
+add_new_asteroid_rate = 6
+
 
 def terminate():
     pygame.quit()
@@ -30,6 +31,7 @@ def drawText(text, font, surface, x, y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
+
 # Set up pygame, the window, and the mouse cursor.
 pygame.init()
 mainClock = pygame.time.Clock()
@@ -47,7 +49,6 @@ pygame.mixer.music.load('background.mid')
 # Set up images.
 playerImage = pygame.image.load('player.png')
 playerRect = playerImage.get_rect()
-AsteroidImage = pygame.image.load(random.choice(['Asteroids.png','baddies2.png','baddies3.png']))
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
