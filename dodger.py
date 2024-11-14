@@ -16,20 +16,29 @@ class Asteroids ():
         a_list.append(newAsteroid)
         return a_list
 
-def MoveAsteroids (a_list2) :
-    for a in a_list2:
-        if not reverseCheat and not slowCheat:
-            a['rect'].move_ip(0, a['speed'])
-        elif reverseCheat:
-            a['rect'].move_ip(0, -5)
-        elif slowCheat:
-            a['rect'].move_ip(0, 1)
+    def MoveAsteroids (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
     
-def DeleteAsteroids(asteroids_list2) :
-    for a in asteroids_list2[:] :
-        if a['rect'].top > WINDOWHEIGHT:
-            asteroids_list2.remove(a)
-    return asteroids_list2
+    def DeleteAsteroids(asteroids_list2) :
+        for a in asteroids_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                asteroids_list2.remove(a)
+        return asteroids_list2
+    
+
+    def playerHasHitAsteroids(playerRect, asteroids):
+        for a in asteroids:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+
     
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
@@ -59,11 +68,6 @@ def waitForPlayerToPressKey():
                     terminate()
                 return
 
-def playerHasHitBaddie(playerRect, asteroids):
-    for b in asteroids:
-        if playerRect.colliderect(b['rect']):
-            return True
-    return False
 
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
@@ -177,10 +181,10 @@ while True:
             playerRect.move_ip(0, PLAYERMOVERATE)
         
         #Move the asteroids down : 
-        MoveAsteroids(asteroids)
+        asteroids = Asteroids.MoveAsteroids(asteroids)
 
         # Delete the asteroids : 
-        asteroids = DeleteAsteroids(asteroids)
+        asteroids = Asteroids.DeleteAsteroids(asteroids)
 
 
         # Draw the game world on the window.
@@ -199,20 +203,11 @@ while True:
 
         pygame.display.update()
 
-
-        #Check if any asteroids have hit the player : 
-        hit_check = False 
-    
-        for a in asteroids : 
-            if playerRect.colliderect(a['rect']):
-                hit_check = True 
-                
-        if hit_check : 
+        if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
             if score > topScore : 
                 topScore = score 
             break 
 
-        print(type(asteroids))
 
         mainClock.tick(FPS)
 
