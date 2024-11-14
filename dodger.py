@@ -14,7 +14,6 @@ add_new_spacedrone_rate = 14
 add_new_fighter_rate = 20
 LEVEL = 1
 
-
 def terminate():
     pygame.quit()
     sys.exit()
@@ -91,9 +90,9 @@ while True:
 
         if score < 1000 : 
             LEVEL = 1
-        elif score >= 1000 and score < 2000 : 
+        elif score > 1000 and score < 2000 : 
            LEVEL = 2
-        elif score >= 2000 : 
+        elif score > 2000 : 
             LEVEL = 3 
 
         for event in pygame.event.get():
