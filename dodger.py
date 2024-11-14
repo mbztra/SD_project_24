@@ -9,9 +9,9 @@ TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERMOVERATE = 5
-add_new_asteroid_rate = 6
-add_new_spacedrone_rate = 8
-add_new_fighter_rate = 10
+add_new_asteroid_rate = 10
+add_new_spacedrone_rate = 14
+add_new_fighter_rate = 20
 LEVEL = 1
 
 
@@ -32,8 +32,14 @@ def waitForPlayerToPressKey():
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
     textrect = textobj.get_rect()
-    textrect.center = (x, y)
+    textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
+
+def drawTitle(text, font, surface, x, y):
+    textobj1 = font.render(text, 1, TEXTCOLOR)
+    textrect1 = textobj1.get_rect()
+    textrect1.center = (x, y)
+    surface.blit(textobj1, textrect1)
 
 
 # Set up pygame, the window, and the mouse cursor.
@@ -53,7 +59,7 @@ font = pygame.font.SysFont(None, 48)
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('gameover.wav')
-pygame.mixer.music.load('background.mid')
+pygame.mixer.music.load('Asteroids_Music_final.wav')
 
 # Set up images.
 playerImage = pygame.image.load('Main_character_resized.png')
@@ -61,8 +67,8 @@ playerRect = playerImage.get_rect()
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
-drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
-drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
+drawTitle('Dodger', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
 waitForPlayerToPressKey()
 
