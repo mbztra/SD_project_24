@@ -48,8 +48,8 @@ class Asteroids :
         return False
 
 class Space_Drones : 
-    space_drones_min_size = 10
-    space_drones_max_size = 50 
+    space_drones_min_size = 30
+    space_drones_max_size = 80 
     space_drones_min_speed = 2 
     space_drones_max_speed = 10
 
