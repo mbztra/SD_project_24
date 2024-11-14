@@ -32,16 +32,19 @@ def waitForPlayerToPressKey():
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
     textrect = textobj.get_rect()
-    textrect.topleft = (x, y)
+    textrect.center = (x, y)
     surface.blit(textobj, textrect)
 
 
 # Set up pygame, the window, and the mouse cursor.
 pygame.init()
 mainClock = pygame.time.Clock()
+
+# Checks the size of the screen displaying the game to adapt.
 screen_info = pygame.display.Info() 
 WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+
 pygame.display.set_caption('Dodger')
 pygame.mouse.set_visible(False)
 
@@ -58,8 +61,8 @@ playerRect = playerImage.get_rect()
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
-drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
-drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
+drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
 waitForPlayerToPressKey()
 
