@@ -1,16 +1,13 @@
 import pygame, random, sys
 from pygame.locals import *
+from Asteroids_Class.Enemy_Class import Asteroids
 
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
-BADDIEMINSIZE = 10
-BADDIEMAXSIZE = 40
-BADDIEMINSPEED = 1
-BADDIEMAXSPEED = 8
-ADDNEWBADDIERATE = 6
+add_new_asteroid_rate = 6
 PLAYERMOVERATE = 5
 
 def terminate():
@@ -26,12 +23,6 @@ def waitForPlayerToPressKey():
                 if event.key == K_ESCAPE: # Pressing ESC quits.
                     terminate()
                 return
-
-def playerHasHitBaddie(playerRect, baddies):
-    for b in baddies:
-        if playerRect.colliderect(b['rect']):
-            return True
-    return False
 
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
@@ -56,7 +47,7 @@ pygame.mixer.music.load('background.mid')
 # Set up images.
 playerImage = pygame.image.load('player.png')
 playerRect = playerImage.get_rect()
-baddieImage = pygame.image.load (random.choice(['baddies1.png','baddies2.png','baddies3.png']))
+AsteroidImage = pygame.image.load(random.choice(['Asteroids.png','baddies2.png','baddies3.png']))
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
@@ -68,13 +59,14 @@ waitForPlayerToPressKey()
 topScore = 0
 while True:
     # Set up the start of the game.
-    baddies = []
+    asteroids = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
     baddieAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)
+    asteroids_add_counter = 0 
 
     while True: # The game loop runs while the game part is playing.
         score += 1 # Increase score.
@@ -124,18 +116,10 @@ while True:
                 # If the mouse moves, move the player where to the cursor.
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
-        # Add new baddies at the top of the screen, if needed.
-        if not reverseCheat and not slowCheat:
-            baddieAddCounter += 1
-        if baddieAddCounter == ADDNEWBADDIERATE:
-            baddieAddCounter = 0
-            baddieSize = random.randint(BADDIEMINSIZE, BADDIEMAXSIZE)
-            newBaddie = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - baddieSize), 0 - baddieSize, baddieSize, baddieSize),
-                        'speed': random.randint(BADDIEMINSPEED, BADDIEMAXSPEED),
-                        'surface':pygame.transform.scale(baddieImage, (baddieSize, baddieSize)),
-                        }
 
-            baddies.append(newBaddie)
+        # Add new baddies at the top of the screen, if needed.
+        if len(asteroids) <= add_new_asteroid_rate :
+            asteroids = Asteroids.CreateNewAsteroids(asteroids)
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -148,18 +132,10 @@ while True:
             playerRect.move_ip(0, PLAYERMOVERATE)
 
         # Move the baddies down.
-        for b in baddies:
-            if not reverseCheat and not slowCheat:
-                b['rect'].move_ip(0, b['speed'])
-            elif reverseCheat:
-                b['rect'].move_ip(0, -5)
-            elif slowCheat:
-                b['rect'].move_ip(0, 1)
+        asteroids = Asteroids.MoveAsteroids(asteroids)
 
         # Delete baddies that have fallen past the bottom.
-        for b in baddies[:]:
-            if b['rect'].top > WINDOWHEIGHT:
-                baddies.remove(b)
+        asteroids = Asteroids.DeleteAsteroids(asteroids)
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
@@ -172,15 +148,15 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each baddie.
-        for b in baddies:
-            windowSurface.blit(b['surface'], b['rect'])
-
+        for a in asteroids : 
+            windowSurface.blit(a['surface'], a['rect'])
+            
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if playerHasHitBaddie(playerRect, baddies):
-            if score > topScore:
-                topScore = score # set new top score
+        if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
+            if score > topScore : 
+                topScore = score 
             break
 
         mainClock.tick(FPS)
