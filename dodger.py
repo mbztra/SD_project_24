@@ -3,6 +3,8 @@ from pygame.locals import *
 
 
 
+
+
 class Asteroids (): 
     asteroids_min_size = 10 
     asteroids_max_size = 40
