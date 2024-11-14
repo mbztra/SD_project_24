@@ -4,14 +4,12 @@ WINDOWHEIGHT = 600
 AsteroidImage = pygame.image.load(random.choice(['Asteroids.png','baddies2.png','baddies3.png']))
 reverseCheat = slowCheat = False
 
-
 class Asteroids (): 
     asteroids_min_size = 10 
     asteroids_max_size = 40  
     asteroids_min_speed = 1  
-    asteroids_max_speed = 2
-    
-    
+    asteroids_max_speed = 8
+
     def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
         newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
@@ -41,3 +39,4 @@ class Asteroids ():
             if playerRect.colliderect(a['rect']):
                 return True
         return False
+
