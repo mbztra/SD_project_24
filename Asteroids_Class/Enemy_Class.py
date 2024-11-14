@@ -147,25 +147,23 @@ class Bullets :
                 bullet_list2.remove(a)
         return bullet_list2
     
-    def BulletHasHitEnemy(bullets, fighters, asteroids, spacedrones):
+    def BulletHasHitFighter(bullets, fighters):
         for a in fighters:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     fighters.remove(a)
+        return fighters
+    
+    def BulletHasHitAsteroids(bullets, asteroids) :
         for a in asteroids :
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     asteroids.remove(a)
+        return asteroids 
+    
+    def BulletHasHitDrones(bullets, spacedrones) : 
         for a in spacedrones:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     spacedrones.remove(a)
-        return fighters, asteroids, spacedrones 
-
-class projectile(object):
-    def __init__(self,x,y,radius,color):
-        self.x = x
-        self.y = y
-        self.radius = radius
-        self.color = color
-        self.vel = 8 
+        return spacedrones 

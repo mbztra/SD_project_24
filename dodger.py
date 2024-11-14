@@ -243,8 +243,14 @@ while True:
                 break 
 
         #Check if any bullets have hit the enemies.
-        #fighters, asteroids, spacedrones = Bullets.BulletHasHitEnemy(bullets, fighters, asteroids, spacedrones)
-
+        #Checking what ennemies to look in relation with the level 
+        if LEVEL == 1 : 
+            asteroids = Bullets.BulletHasHitAsteroids(bullets, asteroids)
+        elif LEVEL == 2 : 
+            spacedrones = Bullets.BulletHasHitDrones(bullets, spacedrones)
+        elif LEVEL == 3 : 
+            fighters = Bullets.BulletHasHitFighter(bullets, fighters)
+        
 
 
         mainClock.tick(FPS)
