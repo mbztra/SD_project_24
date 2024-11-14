@@ -212,6 +212,8 @@ while True:
                 topScore = score 
             break 
 
+        print(type(asteroids))
+
         mainClock.tick(FPS)
 
     # Stop the game and show the "Game Over" screen.
@@ -224,3 +226,4 @@ while True:
     waitForPlayerToPressKey()
 
     gameOverSound.stop()
+
