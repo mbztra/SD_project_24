@@ -10,7 +10,7 @@ BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERMOVERATE = 5
 add_new_asteroid_rate = 10
-add_new_spacedrone_rate = 14
+add_new_spacedrone_rate = 10
 add_new_fighter_rate = 20
 add_new_bullet_rate = 5 
 LEVEL = 0
@@ -192,9 +192,11 @@ while True:
         if LEVEL == 1 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
         elif LEVEL == 2 : 
-            spacedrones = Space_Drones.MoveSpaceDrones(spacedrones)
+            spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.MoveFighter(fighters)
+        
+            
 
         # Now moving the bullets.     
         bullets = Bullets.MoveBullet(bullets)

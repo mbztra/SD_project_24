@@ -53,10 +53,12 @@ class Space_Drones :
     space_drones_max_size = 80 
     space_drones_min_speed = 2 
     space_drones_max_speed = 10
+    space_drones_min_hor_speed = 1
+    space_drones_max_hor_speed = 4
 
     def CreateNewSpaceDrones(a_list) : 
         SpaceDrones_size = random.randint(Space_Drones.space_drones_min_size, Space_Drones.space_drones_max_size)
-        newSpaceDrone = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
+        newSpaceDrone = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'horizontal_speed' : random.randint(Space_Drones.space_drones_min_hor_speed, Space_Drones.space_drones_max_hor_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
         print(newSpaceDrone)
         a_list.append(newSpaceDrone)
         return a_list
@@ -70,6 +72,17 @@ class Space_Drones :
             elif slowCheat:
                 a['rect'].move_ip(0, 1)
         return a_list2
+    
+    def MoveSpaceDronesToPlayer (playerRect, a_list2) : 
+        for a in a_list2 : 
+            if playerRect.centerx > a['rect'].x : 
+                a['rect'].move_ip(a['horizontal_speed'], a['speed'])
+            elif playerRect.centerx < a['rect'].x : 
+                a['rect'].move_ip(-a['horizontal_speed'], a['speed'])
+            elif playerRect.centerx == a['rect'].x : 
+                pass
+        return a_list2
+
     
     def DeleteSpaceDrones(spacedrones_list2) :
         for a in spacedrones_list2[:] :
@@ -147,15 +160,6 @@ class Bullets :
                 bullet_list2.remove(a)
         return bullet_list2
     
-    def BulletHasHitFighter(bullets, fighters, score):
-        for a in fighters[:] :
-            for b in bullets[:] : 
-                if b['rect'].colliderect(a['rect']):
-                    fighters.remove(a)
-                    bullets.remove(b)
-                    score += 200
-        return bullets, fighters, score
-    
     def BulletHasHitAsteroids(bullets, asteroids, score) :
         for a in asteroids[:] :
             for b in bullets[:] : 
@@ -165,6 +169,7 @@ class Bullets :
                     score += 50
         return bullets, asteroids, score
     
+
     def BulletHasHitDrones(bullets, spacedrones, score) : 
         for a in spacedrones[:] :
             for b in bullets[:] : 
@@ -173,3 +178,13 @@ class Bullets :
                     bullets.remove(b)
                     score += 100
         return bullets, spacedrones, score 
+
+    def BulletHasHitFighter(bullets, fighters, score):
+        for a in fighters[:] :
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    fighters.remove(a)
+                    bullets.remove(b)
+                    score += 200
+        return bullets, fighters, score
+    
