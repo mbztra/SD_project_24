@@ -6,6 +6,8 @@ screen_info = pygame.display.Info()
 WINDOWWIDTH, WINDOWHEIGHT = int(screen_info.current_w), int(screen_info.current_h)
 
 AsteroidImage = pygame.image.load('Asteroids2.png')
+AsteroidImageRight = pygame.image.load('Asteroids2_right.png')
+AsteroidImageLeft = pygame.image.load('Asteroids2_left.png')
 SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
@@ -15,24 +17,40 @@ reverseCheat = slowCheat = False
 class Asteroids : 
     asteroids_min_size = 20
     asteroids_max_size = 80
-    asteroids_min_speed = 1  
+    asteroids_min_speed = 2  
     asteroids_max_speed = 8
 
     def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
-        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)),}
+        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)), 'behaviour' : random.randint(1,5)}
+        if newAsteroid['behaviour'] == 5 : 
+            if newAsteroid['rect'].x > WINDOWWIDTH/2 : 
+                newAsteroid['facing'] = "left"
+                newAsteroid['surface'] = pygame.transform.scale(AsteroidImageLeft, (asteroids_size, asteroids_size))
+            elif newAsteroid['rect'].x < WINDOWWIDTH/2 : 
+                newAsteroid['facing'] = "right"
+                newAsteroid['surface'] = pygame.transform.scale(AsteroidImageRight, (asteroids_size, asteroids_size))
+            elif newAsteroid['rect'] == WINDOWWIDTH/2 : 
+                pass
         print(newAsteroid)
         a_list.append(newAsteroid)
         return a_list
 
     def MoveAsteroids (a_list2) :
         for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
+            if a['behaviour'] < 5 : 
+                if not reverseCheat and not slowCheat:
+                    a['rect'].move_ip(0, a['speed'])
+                elif reverseCheat:
+                    a['rect'].move_ip(0, -5)
+                elif slowCheat:
+                    a['rect'].move_ip(0, 1)
+            elif a['behaviour'] == 5 and a['facing'] == "right":
+                if not reverseCheat and not slowCheat:
+                    a['rect'].move_ip(a['speed']/2, a['speed'])
+            elif a['behaviour'] == 5 and a['facing'] == "left" :
+                if not reverseCheat and not slowCheat : 
+                    a['rect'].move_ip(-a['speed'], a['speed'])
         return a_list2
     
     def DeleteAsteroids(asteroids_list2) :

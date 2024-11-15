@@ -15,6 +15,7 @@ add_new_fighter_rate = 20
 add_new_bullet_rate = 5 
 LEVEL = 0
 timer = 0 
+AsteroidImage = pygame.image.load('Asteroids2.png')
 
 def calculus(number) : 
     result = type(number/15)
@@ -98,11 +99,11 @@ while True:
 
         # The game defines on what level we are playing. 
 
-        if score < 1000 : 
+        if score < 1500 : 
             LEVEL = 1
-        elif score > 1000 and score < 2000 : 
+        elif score > 1500 and score < 4500 : 
            LEVEL = 2
-        elif score > 2000 : 
+        elif score > 7500 : 
             LEVEL = 3
 
 
@@ -226,13 +227,14 @@ while True:
         # Draw each ennemy, according to the level.
         if LEVEL == 1 : 
             for a in asteroids : 
-              windowSurface.blit(a['surface'], a['rect'])
+                windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 2 : 
             for a in spacedrones : 
                 windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 3 : 
             for a in fighters :
                 windowSurface.blit(a['surface'], a['rect'])
+
 
 
         # Drawing the Bullets 
