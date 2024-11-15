@@ -3,7 +3,7 @@ from pygame.locals import *
 
 pygame.init()
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
+WINDOWWIDTH, WINDOWHEIGHT = int(screen_info.current_w/2), int(screen_info.current_h/2)
 
 AsteroidImage = pygame.image.load('Asteroids2.png')
 SpaceDroneImage = pygame.image.load('Space_Drones.png')

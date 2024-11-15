@@ -14,8 +14,12 @@ add_new_spacedrone_rate = 14
 add_new_fighter_rate = 20
 add_new_bullet_rate = 5 
 LEVEL = 0
+timer = 0 
 
-keys = pygame.key.get_pressed() 
+def calculus(number) : 
+    result = type(number/15)
+    return result
+
 
 def terminate():
     pygame.quit()
@@ -52,7 +56,7 @@ mainClock = pygame.time.Clock()
 
 # Checks the size of the screen displaying the game to adapt.
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
+WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w/2, screen_info.current_h/2
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
 pygame.display.set_caption('Dodger')
@@ -124,10 +128,9 @@ while True:
                     moveUp = False
                     moveDown = True
                 if event.key == K_SPACE : 
+                    timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets)
-                        print(len(bullets))
-
 
             if event.type == KEYUP:
                 if event.key == K_z:
@@ -147,6 +150,8 @@ while True:
                     moveUp = False
                 if event.key == K_DOWN or event.key == K_s:
                     moveDown = False
+                if event.key == K_SPACE : 
+                    timer = 0 
 
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where to the cursor.
@@ -164,6 +169,12 @@ while True:
         elif LEVEL == 3 : 
             if len(fighters) <= add_new_fighter_rate : 
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
+        
+        if timer > 0 : 
+            if score % 15 == 0 :  
+                timer += 1 
+                if len(bullets) <= add_new_bullet_rate : 
+                    bullets = Bullets.CreateNewBullet(playerRect, bullets)
         
 
         # Move the player around.
@@ -263,8 +274,8 @@ while True:
     pygame.mixer.music.stop()
     gameOverSound.play()
 
-    drawTitle('GAME OVER', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
-    drawTitle'Press a key to play again.', font, windowSurface, (WINDOWWIDTH / 3) - 80, (WINDOWHEIGHT / 3) + 50)
+    drawTitle('GAME OVER', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+    drawTitle('Press a key to play again.', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2) + 50)
     pygame.display.update()
     waitForPlayerToPressKey()
 
