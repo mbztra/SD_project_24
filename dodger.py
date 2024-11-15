@@ -56,7 +56,7 @@ mainClock = pygame.time.Clock()
 
 # Checks the size of the screen displaying the game to adapt.
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w/2, screen_info.current_h/2
+WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
 pygame.display.set_caption('Dodger')

@@ -3,12 +3,13 @@ from pygame.locals import *
 
 pygame.init()
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
+WINDOWWIDTH, WINDOWHEIGHT = int(screen_info.current_w), int(screen_info.current_h)
 
 AsteroidImage = pygame.image.load('Asteroids2.png')
 SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
+BulletImage = pygame.image.load('laser_bullets.png')
 reverseCheat = slowCheat = False
 
 class Asteroids : 
@@ -117,3 +118,58 @@ class Alien_Fighters :
             if playerRect.colliderect(a['rect']):
                 return True
         return False
+    
+class Bullets : 
+    bullet_size = 30
+    bullet_speed = -10
+
+    def CreateNewBullet(playerRect, a_list) : 
+        Bullet_size = Bullets.bullet_size
+        Bullet_speed = Bullets.bullet_speed
+        newBullet = {'rect': pygame.Rect(playerRect.centerx - 15, (playerRect.centery - 30), Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
+        print(newBullet)
+        a_list.append(newBullet)
+        return a_list
+    
+    def MoveBullet (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteBullet(bullet_list2) :
+        for a in bullet_list2[:] :
+            if a['rect'].bottom < 0 :
+                bullet_list2.remove(a)
+        return bullet_list2
+    
+    def BulletHasHitFighter(bullets, fighters, score):
+        for a in fighters[:] :
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    fighters.remove(a)
+                    bullets.remove(b)
+                    score += 200
+        return bullets, fighters, score
+    
+    def BulletHasHitAsteroids(bullets, asteroids, score) :
+        for a in asteroids[:] :
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    asteroids.remove(a)
+                    bullets.remove(b)
+                    score += 50
+        return bullets, asteroids, score
+    
+    def BulletHasHitDrones(bullets, spacedrones, score) : 
+        for a in spacedrones[:] :
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    spacedrones.remove(a)
+                    bullets.remove(b)
+                    score += 100
+        return bullets, spacedrones, score 
