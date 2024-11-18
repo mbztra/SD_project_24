@@ -95,7 +95,7 @@ while True:
     pygame.mixer.music.play(-1, 0.0)
 
     while True: # The game loop runs while the game part is playing.
-        score += 1 # Increase score.
+        score += 1  # Increase score.
 
         # The game defines on what level we are playing. 
 
@@ -171,7 +171,9 @@ while True:
             if len(fighters) <= add_new_fighter_rate : 
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
         
-        if timer > 0 : 
+        if timer == 1 : 
+            timer += 1 
+        elif timer > 1 : 
             if score % 15 == 0 :  
                 timer += 1 
                 if len(bullets) <= add_new_bullet_rate : 
@@ -265,7 +267,7 @@ while True:
         #Checking what ennemies to look in relation with the level 
         if LEVEL == 1 : 
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
-        elif LEVEL == 2 : 
+        elif LEVEL == 2 :                
             bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
         elif LEVEL == 3 : 
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
