@@ -222,6 +222,7 @@ while True:
         windowSurface.fill(BACKGROUNDCOLOR)
 
         # Draw the score and top score.
+        windowSurface.blit(backgroundImage, (0, 0))  # Draw the background image
         drawText('Score: %s' % (score), font, windowSurface, 10, 0)
         drawText('Top Score: %s' % (topScore), font, windowSurface, 10, 40)
 
