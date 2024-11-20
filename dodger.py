@@ -73,10 +73,12 @@ pygame.mixer.music.load('Asteroids_Music_final.wav')
 # Set up images.
 playerImage = pygame.image.load('Main_character_resized.png')
 playerRect = playerImage.get_rect()
+backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' with your image file
+
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
-drawTitle('Dodger', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+drawTitle('Galaxy Guardian', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
 drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
 waitForPlayerToPressKey()
