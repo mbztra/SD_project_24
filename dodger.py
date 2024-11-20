@@ -77,6 +77,7 @@ backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' wit
 
 
 # Show the "Start" screen.
+windowSurface.blit(backgroundImage, (0, 0))  # Draw the image at the top-left corner of the screen
 drawTitle('Galaxy Guardian', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
 drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
