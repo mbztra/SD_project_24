@@ -259,7 +259,7 @@ class millenium_falcon :
     def CreateNewFalcon(a_list) : 
         Falcon_size = millenium_falcon.falcon_size
         Falcon_speed = millenium_falcon.falcon_speed
-        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, Falcon_size)),}
+        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, 2.2 * Falcon_size)),}
         a_list.append(newFalcon)
         return a_list
 
