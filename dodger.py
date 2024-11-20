@@ -4,6 +4,7 @@ from Asteroids_Class.Enemy_Class import Asteroids
 from Asteroids_Class.Enemy_Class import Space_Drones
 from Asteroids_Class.Enemy_Class import Alien_Fighters
 from Asteroids_Class.Enemy_Class import Bullets
+from Asteroids_Class.Enemy_Class import EnemyBullets
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -11,7 +12,7 @@ FPS = 60
 PLAYERMOVERATE = 5
 add_new_asteroid_rate = 10
 add_new_spacedrone_rate = 10
-add_new_fighter_rate = 15
+add_new_fighter_rate = 20
 add_new_bullet_rate = 5 
 LEVEL = 1
 timer = 0 
@@ -91,6 +92,7 @@ while True:
     spacedrones = []
     fighters = []
     bullets = []
+    mean_bullets = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
@@ -103,9 +105,9 @@ while True:
         # The game defines on what level we are playing. 
 
         if score < 1500 : 
-            LEVEL = 1
+            LEVEL = 3
         elif score > 1500 and score < 4500 : 
-           LEVEL = 2
+           LEVEL = 3
         elif score > 5000 : 
             LEVEL = 3
 
@@ -173,6 +175,11 @@ while True:
         elif LEVEL == 3 : 
             if len(fighters) <= add_new_fighter_rate : 
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
+            if score % 60  == 0 : 
+                enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
+
+
+                
         
         if timer == 1 : 
             timer += 1 
@@ -201,6 +208,7 @@ while True:
             spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.MoveFighter(fighters)
+            enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
         
             
 
@@ -215,6 +223,7 @@ while True:
             spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.DeleteFighter(fighters)
+            mean_bullets  = EnemyBullets.DeleteEnemyBullet(mean_bullets)
         
         # Now deleting the bullets 
         bullets = Bullets.DeleteBullet(bullets)
@@ -240,6 +249,8 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 3 : 
             for a in fighters :
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in mean_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
 
 
@@ -267,6 +278,10 @@ while True:
                 if score > topScore : 
                     topScore = score 
                 break 
+            if EnemyBullets.playerHasHitBullet(playerRect, mean_bullets) : 
+                if score > topScore : 
+                    topScore = score 
+                break
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 

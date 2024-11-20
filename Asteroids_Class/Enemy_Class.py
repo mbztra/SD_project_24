@@ -129,7 +129,7 @@ class Alien_Fighters :
         elif newFighter['rect'].x < WINDOWWIDTH/2 : 
                 newFighter['facing'] = "right"
         elif newFighter['rect'] == WINDOWWIDTH/2 : 
-                pass
+                newFighter['facing'] = "right"
         print(newFighter)
         a_list.append(newFighter)
         return a_list
@@ -209,4 +209,42 @@ class Bullets :
                     bullets.remove(b)
                     score += 200
         return bullets, fighters, score
+
+class EnemyBullets : 
+    bullet_size = 30
+    bullet_speed = 10
+
+    def EnemiesShoot(enemy_list, a_list) : 
+        for a in enemy_list : 
+            Bullet_size = EnemyBullets.bullet_size
+            Bullet_speed = EnemyBullets.bullet_speed
+            newBullet = {'rect': pygame.Rect(a['rect'].x + 20, a['rect'].y + 40, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
+            print(newBullet)
+            a_list.append(newBullet)
+        return a_list
+    
+    def MoveEnemyBullet (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteEnemyBullet(bullet_list2) :
+        for a in bullet_list2[:] :
+            if a['rect'].bottom < 0 :
+                bullet_list2.remove(a)
+        return bullet_list2
+    
+    def playerHasHitBullet(playerRect, enemy_bullet):
+        for a in enemy_bullet:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+    
+
+
     
