@@ -5,6 +5,7 @@ from Asteroids_Class.Enemy_Class import Space_Drones
 from Asteroids_Class.Enemy_Class import Alien_Fighters
 from Asteroids_Class.Enemy_Class import Bullets
 from Asteroids_Class.Enemy_Class import EnemyBullets
+from Asteroids_Class.Enemy_Class import millenium_falcon
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -14,6 +15,7 @@ add_new_asteroid_rate = 10
 add_new_spacedrone_rate = 10
 add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
+add_new_falcon_rate = 1
 LEVEL = 1
 timer = 0 
 AsteroidImage = pygame.image.load('Asteroids2.png')
@@ -93,6 +95,7 @@ while True:
     fighters = []
     bullets = []
     mean_bullets = []
+    falcons = []
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
@@ -101,6 +104,7 @@ while True:
 
     while True: # The game loop runs while the game part is playing.
         score += 1  # Increase score.
+        falcon_test = random.randint(1, 3000) 
 
         # The game defines on what level we are playing. 
 
@@ -166,9 +170,12 @@ while True:
 
         # Add new enemies at the top of the screen, if needed.
         # It will check what level we are playing and will display the correct ennemies. 
+
         if LEVEL == 1 : 
             if len(asteroids) <= add_new_asteroid_rate :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
+            if falcon_test == 9 and len(falcons) < add_new_falcon_rate : 
+                falcons = millenium_falcon.CreateNewFalcon(falcons)
         elif LEVEL == 2 : 
             if len(spacedrones) <= add_new_spacedrone_rate : 
                 spacedrones = Space_Drones.CreateNewSpaceDrones(spacedrones)
@@ -204,6 +211,8 @@ while True:
         # It checks what enemies to move according to the level. 
         if LEVEL == 1 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
+            if len(falcons) >= 1 : 
+                falcons = millenium_falcon.MoveFalcon(falcons)
         elif LEVEL == 2 : 
             spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
         elif LEVEL == 3 : 
@@ -216,9 +225,11 @@ while True:
         bullets = Bullets.MoveBullet(bullets)
 
         # Delete ennemies that have fallen past the bottom.
-        # Once again, checks the level.
+        # Once again, checks the level.)
         if LEVEL == 1 : 
             asteroids = Asteroids.DeleteAsteroids(asteroids)
+            if len(falcons) >= 1 : 
+                falcons = millenium_falcon.DeleteFalcon(falcons)
         elif LEVEL == 2 : 
             spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
         elif LEVEL == 3 : 
@@ -241,9 +252,15 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each ennemy, according to the level.
+        if LEVEL == 0 : 
+            for a in falcons : 
+                windowSurface.blit(a['surface'], a['rect'])
         if LEVEL == 1 : 
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
+            if len(falcons) >= 1 : 
+                for a in falcons : 
+                    windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 2 : 
             for a in spacedrones : 
                 windowSurface.blit(a['surface'], a['rect'])
@@ -268,6 +285,11 @@ while True:
                 if score > topScore : 
                     topScore = score 
                 break
+            if len(falcons) >= 1 : 
+                if millenium_falcon.playerHasHitFlacon(playerRect, falcons) : 
+                    if score > topScore : 
+                        topScore = score 
+                    break
         elif LEVEL == 2 : 
             if Space_Drones.playerHasHitSpaceDrone(playerRect, spacedrones) : 
                 if score > topScore : 
@@ -285,8 +307,12 @@ while True:
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
+        if LEVEL == 0 : 
+            bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
         if LEVEL == 1 : 
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
+            if len(falcons) >= 1 : 
+                bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
         elif LEVEL == 2 :                
             bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
         elif LEVEL == 3 : 

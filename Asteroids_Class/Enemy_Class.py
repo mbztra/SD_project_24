@@ -13,6 +13,7 @@ AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
+FalconImage = pygame.image.load('falcon.png')
 reverseCheat = slowCheat = False
 facing = "left"
 
@@ -207,6 +208,15 @@ class Bullets :
                     bullets.remove(b)
                     score += 200
         return bullets, fighters, score
+    
+    def BulletHasHitFalcon(bullets, fighters, score):
+        for a in fighters [:]:
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    fighters.remove(a)
+                    bullets.remove(b)
+                    score = 5000
+        return bullets, fighters, score
 
 class EnemyBullets : 
     bullet_size = 30
@@ -242,6 +252,39 @@ class EnemyBullets :
                 return True
         return False
     
+class millenium_falcon : 
+    falcon_size = 50
+    falcon_speed = 2  
+
+    def CreateNewFalcon(a_list) : 
+        Falcon_size = millenium_falcon.falcon_size
+        Falcon_speed = millenium_falcon.falcon_speed
+        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, Falcon_size)),}
+        a_list.append(newFalcon)
+        return a_list
+
+    def MoveFalcon (a_list2) :
+        for a in a_list2: 
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteFalcon(asteroids_list2) :
+        for a in asteroids_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                asteroids_list2.remove(a)
+        return asteroids_list2
+    
+
+    def playerHasHitFlacon(playerRect, asteroids):
+        for a in asteroids:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
 
 
     
