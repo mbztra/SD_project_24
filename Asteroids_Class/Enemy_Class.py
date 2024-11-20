@@ -118,24 +118,28 @@ class Space_Drones :
 class Alien_Fighters : 
     fighters_min_size = 30
     fighters_max_size = 90
-    fighters_min_speed = 5
-    fighters_max_speed = 15
+    fighters_min_speed = 3
+    fighters_max_speed = 10
 
     def CreateNewFighter(a_list) : 
         Fighter_size = random.randint(Alien_Fighters.fighters_min_size, Alien_Fighters.fighters_max_size)
         newFighter = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Fighter_size), 0 - Fighter_size, Fighter_size, Fighter_size), 'speed': random.randint(Alien_Fighters.fighters_min_speed, Alien_Fighters.fighters_max_speed), 'surface':pygame.transform.scale(AlienFighterImage, (Fighter_size, Fighter_size)),}
+        if newFighter['rect'].x > WINDOWWIDTH/2 : 
+                newFighter['facing'] = "left"
+        elif newFighter['rect'].x < WINDOWWIDTH/2 : 
+                newFighter['facing'] = "right"
+        elif newFighter['rect'] == WINDOWWIDTH/2 : 
+                pass
         print(newFighter)
         a_list.append(newFighter)
         return a_list
     
     def MoveFighter (a_list2) :
         for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
+            if not reverseCheat and not slowCheat and a['facing'] == "right":
+                a['rect'].move_ip(a['speed']/2, a['speed'])
+            if a['facing'] == "left" : 
+                a['rect'].move_ip(-a['speed']/2, a['speed'])
         return a_list2
     
     def DeleteFighter(fighters_list2) :

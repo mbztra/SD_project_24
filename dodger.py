@@ -11,9 +11,9 @@ FPS = 60
 PLAYERMOVERATE = 5
 add_new_asteroid_rate = 10
 add_new_spacedrone_rate = 10
-add_new_fighter_rate = 20
+add_new_fighter_rate = 15
 add_new_bullet_rate = 5 
-LEVEL = 0
+LEVEL = 1
 timer = 0 
 AsteroidImage = pygame.image.load('Asteroids2.png')
 
