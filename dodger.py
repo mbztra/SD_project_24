@@ -5,7 +5,7 @@ from Asteroids_Class.Enemy_Class import Space_Drones
 from Asteroids_Class.Enemy_Class import Alien_Fighters
 from Asteroids_Class.Enemy_Class import Bullets
 
-TEXTCOLOR = (0, 0, 0)
+TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERMOVERATE = 5
@@ -77,7 +77,6 @@ backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' wit
 
 
 # Show the "Start" screen.
-windowSurface.fill(BACKGROUNDCOLOR)
 drawTitle('Galaxy Guardian', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
 drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
