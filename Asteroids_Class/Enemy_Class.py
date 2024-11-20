@@ -13,6 +13,7 @@ AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
 reverseCheat = slowCheat = False
+facing = "left"
 
 class Asteroids : 
     asteroids_min_size = 20
@@ -32,7 +33,6 @@ class Asteroids :
                 newAsteroid['surface'] = pygame.transform.scale(AsteroidImageRight, (asteroids_size, asteroids_size))
             elif newAsteroid['rect'] == WINDOWWIDTH/2 : 
                 pass
-        print(newAsteroid)
         a_list.append(newAsteroid)
         return a_list
 
@@ -77,7 +77,6 @@ class Space_Drones :
     def CreateNewSpaceDrones(a_list) : 
         SpaceDrones_size = random.randint(Space_Drones.space_drones_min_size, Space_Drones.space_drones_max_size)
         newSpaceDrone = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'horizontal_speed' : random.randint(Space_Drones.space_drones_min_hor_speed, Space_Drones.space_drones_max_hor_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
-        print(newSpaceDrone)
         a_list.append(newSpaceDrone)
         return a_list
     
@@ -98,7 +97,7 @@ class Space_Drones :
             elif playerRect.centerx < a['rect'].x : 
                 a['rect'].move_ip(-a['horizontal_speed'], a['speed'])
             elif playerRect.centerx == a['rect'].x : 
-                pass
+                a['rect'].move_ip(0, a['speed'])
         return a_list2
 
     
@@ -130,7 +129,6 @@ class Alien_Fighters :
                 newFighter['facing'] = "right"
         elif newFighter['rect'] == WINDOWWIDTH/2 : 
                 newFighter['facing'] = "right"
-        print(newFighter)
         a_list.append(newFighter)
         return a_list
     
@@ -162,7 +160,6 @@ class Bullets :
         Bullet_size = Bullets.bullet_size
         Bullet_speed = Bullets.bullet_speed
         newBullet = {'rect': pygame.Rect(playerRect.centerx - 15, (playerRect.centery - 30), Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
-        print(newBullet)
         a_list.append(newBullet)
         return a_list
     
@@ -183,7 +180,7 @@ class Bullets :
         return bullet_list2
     
     def BulletHasHitAsteroids(bullets, asteroids, score) :
-        for a in asteroids[:] :
+        for a in asteroids [:]:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     asteroids.remove(a)
@@ -193,7 +190,7 @@ class Bullets :
     
 
     def BulletHasHitDrones(bullets, spacedrones, score) : 
-        for a in spacedrones[:] :
+        for a in spacedrones [:]:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     spacedrones.remove(a)
@@ -202,7 +199,7 @@ class Bullets :
         return bullets, spacedrones, score 
 
     def BulletHasHitFighter(bullets, fighters, score):
-        for a in fighters[:] :
+        for a in fighters [:]:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
                     fighters.remove(a)
@@ -219,7 +216,6 @@ class EnemyBullets :
             Bullet_size = EnemyBullets.bullet_size
             Bullet_speed = EnemyBullets.bullet_speed
             newBullet = {'rect': pygame.Rect(a['rect'].x + 20, a['rect'].y + 40, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
-            print(newBullet)
             a_list.append(newBullet)
         return a_list
     

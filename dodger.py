@@ -12,7 +12,7 @@ FPS = 60
 PLAYERMOVERATE = 5
 add_new_asteroid_rate = 10
 add_new_spacedrone_rate = 10
-add_new_fighter_rate = 20
+add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
 LEVEL = 1
 timer = 0 
@@ -105,9 +105,9 @@ while True:
         # The game defines on what level we are playing. 
 
         if score < 1500 : 
-            LEVEL = 3
+            LEVEL = 1 
         elif score > 1500 and score < 4500 : 
-           LEVEL = 3
+           LEVEL = 2
         elif score > 5000 : 
             LEVEL = 3
 
@@ -181,9 +181,9 @@ while True:
 
                 
         
-        if timer == 1 : 
+        if timer < 15 and timer > 0 : 
             timer += 1 
-        elif timer > 1 : 
+        elif timer >= 15 : 
             if score % 15 == 0 :  
                 timer += 1 
                 if len(bullets) <= add_new_bullet_rate : 
