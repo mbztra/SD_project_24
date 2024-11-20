@@ -12,6 +12,7 @@ SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
+EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 reverseCheat = slowCheat = False
 facing = "left"
 
@@ -215,7 +216,7 @@ class EnemyBullets :
         for a in enemy_list : 
             Bullet_size = EnemyBullets.bullet_size
             Bullet_speed = EnemyBullets.bullet_speed
-            newBullet = {'rect': pygame.Rect(a['rect'].x + 20, a['rect'].y + 40, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
+            newBullet = {'rect': pygame.Rect(a['rect'].x + 20, a['rect'].y + 40, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(EnemyBulletImage, (Bullet_size, Bullet_size)),}
             a_list.append(newBullet)
         return a_list
     

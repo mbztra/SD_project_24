@@ -105,7 +105,7 @@ while True:
         # The game defines on what level we are playing. 
 
         if score < 1500 : 
-            LEVEL = 1 
+            LEVEL = 1
         elif score > 1500 and score < 4500 : 
            LEVEL = 2
         elif score > 5000 : 
