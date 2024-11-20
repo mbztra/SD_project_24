@@ -74,6 +74,7 @@ pygame.mixer.music.load('Asteroids_Music_final.wav')
 playerImage = pygame.image.load('Main_character_resized.png')
 playerRect = playerImage.get_rect()
 backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' with your image file
+backgroundImage = pygame.transform.scale(backgroundImage, (WINDOWWIDTH, WINDOWHEIGHT))
 
 
 # Show the "Start" screen.
