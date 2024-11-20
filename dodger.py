@@ -106,7 +106,7 @@ while True:
             LEVEL = 1
         elif score > 1500 and score < 4500 : 
            LEVEL = 2
-        elif score > 7500 : 
+        elif score > 5000 : 
             LEVEL = 3
 
 
