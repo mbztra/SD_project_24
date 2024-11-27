@@ -218,14 +218,19 @@ class Bullets :
                     score = 5000
         return bullets, fighters, score
     
-    def BulletHasHitBoss(bullets, boss, score):
+    def BulletHasHitBoss(bullets, boss, score, LEVEL):
         for a in boss [:]:
             for b in bullets[:] : 
                 if b['rect'].colliderect(a['rect']):
-                    boss.remove(a)
-                    bullets.remove(b)
-                    score += 1000
-        return bullets, boss, score
+                    if a['life'] > 1 : 
+                        a['life'] -= 1 
+                        bullets.remove(b)
+                    elif a['life'] == 1 : 
+                        boss.remove(a)
+                        bullets.remove(b)
+                        LEVEL = 5
+                        score += 3000
+        return bullets, boss, score, LEVEL
 
 class EnemyBullets : 
     bullet_size = 30

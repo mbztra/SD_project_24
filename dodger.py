@@ -132,7 +132,7 @@ while True:
            LEVEL = 2
         elif score > 4500 and score < 7500 : 
             LEVEL = 3
-        elif score > 7500 : 
+        elif score > 7500 and score < 17000 : 
             LEVEL = 4
 
 
@@ -364,7 +364,7 @@ while True:
         elif LEVEL == 3 : 
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
         elif LEVEL == 4 : 
-            bullets, boss, score = Bullets.BulletHasHitBoss(bullets, boss, score)
+            bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
         
 
 
