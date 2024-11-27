@@ -315,7 +315,7 @@ class BossShip() :
         Ship_Speed = BossShip.boss_ship_speed
         x_posi = BossShip.x_pos
         y_posi = BossShip.y_pos
-        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 500,}
+        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 50,}
         a_list.append(newBoss)
         print(BossShip.image_width)
         print(WINDOWWIDTH)
