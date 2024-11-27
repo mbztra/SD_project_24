@@ -122,8 +122,10 @@ while True:
             LEVEL = 1
         elif score > 1500 and score < 4500 : 
            LEVEL = 2
-        elif score > 5000 : 
+        elif score > 4500 and score < 7500 : 
             LEVEL = 3
+        elif score > 7500 : 
+            LEVEL = 4
 
 
         for event in pygame.event.get():
