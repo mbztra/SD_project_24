@@ -72,8 +72,9 @@ font = pygame.font.Font(font_path, 30)  # Load the custom font with a size of 48
 font_title = pygame.font.Font(font_path, 50)
 
 # Set up sounds.
-gameOverSound = pygame.mixer.Sound('gameover.wav')
+gameOverSound = pygame.mixer.Sound('laser.wav')
 pygame.mixer.music.load('Asteroids_Music_final.wav')
+
 
 # Set up images.
 playerImage = pygame.image.load('Main_character_resized.png')
@@ -103,6 +104,8 @@ while True:
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
     pygame.mixer.music.play(-1, 0.0)
+    volume = 1
+    pygame.mixer.music.set_volume(volume)
 
     while True: # The game loop runs while the game part is playing.
         score += 1  # Increase score.
@@ -325,7 +328,9 @@ while True:
         mainClock.tick(FPS)
 
     # Stop the game and show the "Game Over" screen.
-    pygame.mixer.music.stop()
+    #pygame.mixer.music.stop()
+    volume = 0.2
+    pygame.mixer.music.set_volume(volume)
     gameOverSound.play()
 
     drawTitle('GAME OVER', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
