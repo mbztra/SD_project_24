@@ -115,7 +115,7 @@ while True:
     boss = []
     boss_bullets = []
     boss_missiles = []
-    score = 7500
+    score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
