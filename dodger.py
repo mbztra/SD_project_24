@@ -8,6 +8,7 @@ from Asteroids_Class.Enemy_Class import EnemyBullets
 from Asteroids_Class.Enemy_Class import millenium_falcon
 from Asteroids_Class.Enemy_Class import BossShip
 from Asteroids_Class.Enemy_Class import BossBullets
+from Asteroids_Class.Enemy_Class import BossBombs
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -20,6 +21,7 @@ add_new_bullet_rate = 5
 add_new_falcon_rate = 1
 add_new_boss_rate = 1 
 LEVEL = 1
+facing = 1 
 timer = 0 
 AsteroidImage = pygame.image.load('Asteroids2.png')
 
@@ -112,6 +114,7 @@ while True:
     falcons = []
     boss = []
     boss_bullets = []
+    boss_missiles = []
     score = 7500
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
@@ -209,6 +212,13 @@ while True:
                 boss = BossShip.CreateNewBoss(boss)
             if score % 30 == 0 : 
                 boss_bullets = BossBullets.BossShoot(boss_bullets)
+                if len(boss_missiles) < 2 : 
+                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 2)
+                    facing = 2
+                elif facing == 2 :  
+                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 1)
+                    facing = 1 
+
 
 
 
@@ -248,12 +258,13 @@ while True:
             for a in boss : 
                 if a['rect'].y < y_final_pos :  
                     boss = BossShip.MoveBoss(boss)
+            boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
+            boss_missiles = BossBombs.MoveBombsToPlayer(playerRect, boss_missiles)
          
             
 
         # Now moving the bullets.     
         bullets = Bullets.MoveBullet(bullets)
-        boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
 
         # Delete ennemies that have fallen past the bottom.
         # Once again, checks the level.)
@@ -269,6 +280,7 @@ while True:
         elif LEVEL == 4 : 
             boss = BossShip.DeleteBoss(boss)
             boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
+            boss_missiles = BossBombs.DeleteBombs(boss_missiles)
         
         # Now deleting the bullets 
         bullets = Bullets.DeleteBullet(bullets)
@@ -307,6 +319,8 @@ while True:
             for a in boss : 
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_bullets : 
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in boss_missiles : 
                 windowSurface.blit(a['surface'], a['rect'])
                 
 
@@ -350,6 +364,14 @@ while True:
                 if score > topScore : 
                     topScore = score 
                 break 
+            if BossBombs.playerHasHitBombs(playerRect, boss_missiles) : 
+                if score > topScore : 
+                    topScore = score 
+                break
+            if BossBullets.playerHasHitBossBullet(playerRect, boss_bullets) : 
+                if score > topScore : 
+                    topScore = score 
+                break                
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
@@ -365,6 +387,7 @@ while True:
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
         elif LEVEL == 4 : 
             bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
+            bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
         
 
 

@@ -14,6 +14,7 @@ BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
+MissileImage = pygame.image.load('missile.png')
 reverseCheat = slowCheat = False
 facing = "left"
 
@@ -231,6 +232,15 @@ class Bullets :
                         LEVEL = 5
                         score += 3000
         return bullets, boss, score, LEVEL
+    
+    def BulletHasHitBomb(bullets, boss_missiles,):
+        for a in boss_missiles [:]:
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    boss_missiles.remove(a)
+                    bullets.remove(b)
+                    score = 5000
+        return bullets, boss_missiles
 
 class EnemyBullets : 
     bullet_size = 30
@@ -373,6 +383,54 @@ class BossBullets :
     
     def playerHasHitBossBullet(playerRect, enemy_bullet):
         for a in enemy_bullet:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+
+
+class BossBombs : 
+    bomb_size = 50
+    bomb_speed = 2
+    image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
+    y_pos = image_height/2 + 20
+    x_pos = (WINDOWWIDTH - image_width)/2
+    x_spawn = [x_pos + 250, WINDOWWIDTH - x_pos - 250 ]
+    y_spawn = y_pos
+    bomb_width, bomb_height = MissileImage.get_size()
+
+
+    def BossShootsBombs(a_list, facing) : 
+        for a in BossBombs.x_spawn : 
+            Bomb_width = BossBombs.bomb_width/10
+            Bomb_height = BossBombs.bomb_height/10
+            Bomb_speed = BossBombs.bomb_speed
+            if facing == 1 : 
+                X_spawn = BossBombs.x_spawn[0] 
+            elif facing == 2 : 
+                X_spawn = BossBombs.x_spawn[1]
+            newBomb = {'rect': pygame.Rect(X_spawn, BossBombs.y_spawn, Bomb_width, Bomb_height), 'speed': Bomb_speed, 'surface':pygame.transform.scale(MissileImage, (Bomb_width, Bomb_height)),}
+            a_list.append(newBomb)
+        return a_list
+
+    def MoveBombsToPlayer (playerRect, a_list2) : 
+        for a in a_list2 : 
+            if playerRect.centerx > a['rect'].x : 
+                a['rect'].move_ip(a['speed'], a['speed'])
+            elif playerRect.centerx < a['rect'].x : 
+                a['rect'].move_ip(-a['speed'], a['speed'])
+            elif playerRect.centerx == a['rect'].x : 
+                a['rect'].move_ip(0, a['speed'])
+        return a_list2
+
+    
+    def DeleteBombs(bombs_list2) :
+        for a in bombs_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                bombs_list2.remove(a)
+        return bombs_list2
+    
+    def playerHasHitBombs(playerRect, bombs):
+        for a in bombs:
             if playerRect.colliderect(a['rect']):
                 return True
         return False
