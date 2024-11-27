@@ -67,7 +67,8 @@ pygame.display.set_caption('Dodger')
 pygame.mouse.set_visible(False)
 
 # Set up the fonts.
-font = pygame.font.SysFont(None, 48)
+font_path = 'Orbitron-Regular.ttf'  # Path to your custom font in the project folder
+font = pygame.font.Font(font_path, 32)  # Load the custom font with a size of 48
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('gameover.wav')
