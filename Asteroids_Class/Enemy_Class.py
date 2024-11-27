@@ -10,7 +10,7 @@ AsteroidImageRight = pygame.image.load('Asteroids2_right.png')
 AsteroidImageLeft = pygame.image.load('Asteroids2_left.png')
 SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
-BossShipImage = pygame.image.load('Boss-ship2.webp')
+BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
@@ -300,18 +300,19 @@ class BossShip() :
     boss_ship_size = 500
     boss_ship_speed = 1
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    x_pos = WINDOWWIDTH - (image_width/1.47)
+    x_pos = (WINDOWWIDTH - image_width)/2
     y_pos = -image_height/18
 
     def CreateNewBoss(a_list) : 
-        Ship_size_x = BossShip.image_width / 1.618
-        Ship_size_y = BossShip.image_height / 1.618
+        Ship_size_x = BossShip.image_width 
+        Ship_size_y = BossShip.image_height 
         Ship_Speed = BossShip.boss_ship_speed
         x_posi = BossShip.x_pos
         y_posi = BossShip.y_pos
         newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)),}
         a_list.append(newBoss)
         print(BossShip.image_width)
+        print(WINDOWWIDTH)
         return a_list
     
     def MoveBoss (a_list2) :
