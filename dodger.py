@@ -6,6 +6,7 @@ from Asteroids_Class.Enemy_Class import Alien_Fighters
 from Asteroids_Class.Enemy_Class import Bullets
 from Asteroids_Class.Enemy_Class import EnemyBullets
 from Asteroids_Class.Enemy_Class import millenium_falcon
+from Asteroids_Class.Enemy_Class import BossShip
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -16,6 +17,7 @@ add_new_spacedrone_rate = 10
 add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
 add_new_falcon_rate = 1
+add_new_boss_rate = 1 
 LEVEL = 1
 timer = 0 
 AsteroidImage = pygame.image.load('Asteroids2.png')
@@ -104,7 +106,8 @@ while True:
     bullets = []
     mean_bullets = []
     falcons = []
-    score = 0
+    boss = []
+    score = 7500
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
@@ -196,6 +199,10 @@ while True:
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
             if score % 60  == 0 : 
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
+        elif LEVEL == 4 : 
+            if len(boss) < add_new_boss_rate : 
+                boss = BossShip.CreateNewBoss(boss)
+
 
 
                 
@@ -230,6 +237,10 @@ while True:
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.MoveFighter(fighters)
             enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
+        elif LEVEL == 4 : 
+            for a in boss : 
+                if a['rect'].y > 100 :  
+                    boss = BossShip.MoveBoss(boss)
         
             
 
@@ -247,6 +258,8 @@ while True:
         elif LEVEL == 3 : 
             fighters = Alien_Fighters.DeleteFighter(fighters)
             mean_bullets  = EnemyBullets.DeleteEnemyBullet(mean_bullets)
+        elif LEVEL == 4 : 
+            boss = BossShip.DeleteBoss(boss)
         
         # Now deleting the bullets 
         bullets = Bullets.DeleteBullet(bullets)
@@ -281,6 +294,11 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
             for a in mean_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
+        elif LEVEL == 4 : 
+            for a in boss : 
+                windowSurface.blit(a['surface'], a['rect'])
+                
+
 
 
 
@@ -316,6 +334,11 @@ while True:
                 if score > topScore : 
                     topScore = score 
                 break
+        elif LEVEL == 4 :
+            if BossShip.playerHasHitBoss(playerRect, boss) : 
+                if score > topScore : 
+                    topScore = score 
+                break 
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
@@ -329,6 +352,8 @@ while True:
             bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
         elif LEVEL == 3 : 
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
+        elif LEVEL == 4 : 
+            bullets, boss, score = Bullets.BulletHasHitBoss(bullets, boss, score)
         
 
 

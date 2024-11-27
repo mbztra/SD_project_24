@@ -10,7 +10,7 @@ AsteroidImageRight = pygame.image.load('Asteroids2_right.png')
 AsteroidImageLeft = pygame.image.load('Asteroids2_left.png')
 SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
-BossShipImage = pygame.image.load('Boss-ship.png')
+BossShipImage = pygame.image.load('Boss-ship2.webp')
 BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
@@ -217,6 +217,15 @@ class Bullets :
                     bullets.remove(b)
                     score = 5000
         return bullets, fighters, score
+    
+    def BulletHasHitBoss(bullets, boss, score):
+        for a in boss [:]:
+            for b in bullets[:] : 
+                if b['rect'].colliderect(a['rect']):
+                    boss.remove(a)
+                    bullets.remove(b)
+                    score += 1000
+        return bullets, boss, score
 
 class EnemyBullets : 
     bullet_size = 30
@@ -287,4 +296,38 @@ class millenium_falcon :
         return False
 
 
+class BossShip() : 
+    boss_ship_size = 500
+    boss_ship_speed = 1
+    image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
+    x_pos = WINDOWWIDTH - (image_width/1.47)
+    y_pos = -image_height/18
+
+    def CreateNewBoss(a_list) : 
+        Ship_size_x = BossShip.image_width / 1.618
+        Ship_size_y = BossShip.image_height / 1.618
+        Ship_Speed = BossShip.boss_ship_speed
+        x_posi = BossShip.x_pos
+        y_posi = BossShip.y_pos
+        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)),}
+        a_list.append(newBoss)
+        print(BossShip.image_width)
+        return a_list
+    
+    def MoveBoss (a_list2) :
+        for a in a_list2:
+            a['rect'].move_ip(0, a['speed'])
+        return a_list2
+    
+    def DeleteBoss(list_2) :
+        for a in list_2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                list_2.remove(a)
+        return list_2
+    
+    def playerHasHitBoss(playerRect, boss):
+        for a in boss:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
     
