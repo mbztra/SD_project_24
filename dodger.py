@@ -68,7 +68,8 @@ pygame.mouse.set_visible(False)
 
 # Set up the fonts.
 font_path = 'Orbitron-Regular.ttf'  # Path to your custom font in the project folder
-font = pygame.font.Font(font_path, 32)  # Load the custom font with a size of 48
+font = pygame.font.Font(font_path, 30)  # Load the custom font with a size of 48
+font_title = pygame.font.Font(font_path, 50)
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('gameover.wav')
@@ -83,7 +84,7 @@ backgroundImage = pygame.transform.scale(backgroundImage, (WINDOWWIDTH, WINDOWHE
 
 # Show the "Start" screen.
 windowSurface.blit(backgroundImage, (0, 0))  # Draw the image at the top-left corner of the screen
-drawTitle('Galaxy Guardian', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+drawTitle('Galaxy Guardian', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
 drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
 waitForPlayerToPressKey()
@@ -327,8 +328,8 @@ while True:
     pygame.mixer.music.stop()
     gameOverSound.play()
 
-    drawTitle('GAME OVER', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
-    drawTitle('Press a key to play again.', font, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2) + 50)
+    drawTitle('GAME OVER', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
+    drawTitle('Press a key to play again.', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2) + 50)
     pygame.display.update()
     waitForPlayerToPressKey()
 
