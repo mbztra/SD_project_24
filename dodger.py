@@ -7,6 +7,7 @@ from Asteroids_Class.Enemy_Class import Bullets
 from Asteroids_Class.Enemy_Class import EnemyBullets
 from Asteroids_Class.Enemy_Class import millenium_falcon
 from Asteroids_Class.Enemy_Class import BossShip
+from Asteroids_Class.Enemy_Class import BossBullets
 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -87,6 +88,9 @@ logoImage = pygame.image.load("Logo2.png")
 image_width, image_height = logoImage.get_size() # Calculate the position to center the image 
 x_pos = (WINDOWWIDTH - image_width) / 2 
 y_pos = (WINDOWHEIGHT - image_height) / 2 - 100
+Boss_image = pygame.image.load('Boss-ship.png')
+Boss_width, Boss_height = Boss_image.get_size()
+y_final_pos = -Boss_width/25
 
 
 # Show the "Start" screen.
@@ -107,6 +111,7 @@ while True:
     mean_bullets = []
     falcons = []
     boss = []
+    boss_bullets = []
     score = 7500
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
     moveLeft = moveRight = moveUp = moveDown = False
@@ -202,6 +207,8 @@ while True:
         elif LEVEL == 4 : 
             if len(boss) < add_new_boss_rate : 
                 boss = BossShip.CreateNewBoss(boss)
+            if score % 30 == 0 : 
+                boss_bullets = BossBullets.BossShoot(boss_bullets)
 
 
 
@@ -239,13 +246,14 @@ while True:
             enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
         elif LEVEL == 4 : 
             for a in boss : 
-                if a['rect'].y > 100 :  
+                if a['rect'].y < y_final_pos :  
                     boss = BossShip.MoveBoss(boss)
-        
+         
             
 
         # Now moving the bullets.     
         bullets = Bullets.MoveBullet(bullets)
+        boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
 
         # Delete ennemies that have fallen past the bottom.
         # Once again, checks the level.)
@@ -260,6 +268,7 @@ while True:
             mean_bullets  = EnemyBullets.DeleteEnemyBullet(mean_bullets)
         elif LEVEL == 4 : 
             boss = BossShip.DeleteBoss(boss)
+            boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
         
         # Now deleting the bullets 
         bullets = Bullets.DeleteBullet(bullets)
@@ -296,6 +305,8 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 4 : 
             for a in boss : 
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in boss_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
                 
 

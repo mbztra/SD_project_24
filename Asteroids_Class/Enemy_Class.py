@@ -298,10 +298,11 @@ class millenium_falcon :
 
 class BossShip() : 
     boss_ship_size = 500
-    boss_ship_speed = 1
+    boss_ship_speed = 10
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
     x_pos = (WINDOWWIDTH - image_width)/2
-    y_pos = -image_height/18
+    y_pos = -image_height
+    y_final_pos = -image_height/18
 
     def CreateNewBoss(a_list) : 
         Ship_size_x = BossShip.image_width 
@@ -309,7 +310,7 @@ class BossShip() :
         Ship_Speed = BossShip.boss_ship_speed
         x_posi = BossShip.x_pos
         y_posi = BossShip.y_pos
-        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)),}
+        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 500,}
         a_list.append(newBoss)
         print(BossShip.image_width)
         print(WINDOWWIDTH)
@@ -332,3 +333,41 @@ class BossShip() :
                 return True
         return False
     
+class BossBullets : 
+    bullet_size = 30
+    bullet_speed = 10
+    image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
+    y_pos = image_height/2 + 20
+    x_pos = (WINDOWWIDTH - image_width)/2
+    x_spawn = [x_pos + 60, x_pos + 120, x_pos + 180, WINDOWWIDTH - x_pos - 60, WINDOWWIDTH - x_pos - 120, WINDOWWIDTH - x_pos - 180 ]
+    y_spawn = y_pos
+
+    def BossShoot(a_list) : 
+        for a in BossBullets.x_spawn : 
+            Bullet_size = BossBullets.bullet_size
+            Bullet_speed = BossBullets.bullet_speed
+            newBullet = {'rect': pygame.Rect(a, BossBullets.y_spawn, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(EnemyBulletImage, (Bullet_size, Bullet_size)),}
+            a_list.append(newBullet)
+        return a_list
+    
+    def MoveBossBullet (a_list2) :
+        for a in a_list2:
+            if not reverseCheat and not slowCheat:
+                a['rect'].move_ip(0, a['speed'])
+            elif reverseCheat:
+                a['rect'].move_ip(0, -5)
+            elif slowCheat:
+                a['rect'].move_ip(0, 1)
+        return a_list2
+    
+    def DeleteBossBullet(bullet_list2) :
+        for a in bullet_list2[:] :
+            if a['rect'].bottom < 0 :
+                bullet_list2.remove(a)
+        return bullet_list2
+    
+    def playerHasHitBossBullet(playerRect, enemy_bullet):
+        for a in enemy_bullet:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
