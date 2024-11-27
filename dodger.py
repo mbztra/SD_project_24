@@ -81,10 +81,15 @@ playerImage = pygame.image.load('Main_character_resized.png')
 playerRect = playerImage.get_rect()
 backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' with your image file
 backgroundImage = pygame.transform.scale(backgroundImage, (WINDOWWIDTH, WINDOWHEIGHT))
+logoImage = pygame.image.load("Logo.png")
+image_width, image_height = logoImage.get_size() # Calculate the position to center the image 
+x_pos = (WINDOWWIDTH - image_width) / 2 
+y_pos = (WINDOWHEIGHT - image_height) / 2 - 100
 
 
 # Show the "Start" screen.
 windowSurface.blit(backgroundImage, (0, 0))  # Draw the image at the top-left corner of the screen
+windowSurface.blit(logoImage, (x_pos, y_pos ))
 drawTitle('Galaxy Guardian', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
 drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
 pygame.display.update()
