@@ -112,7 +112,7 @@ x_pos = (WINDOWWIDTH - image_width) / 2
 y_pos = (WINDOWHEIGHT - image_height) / 2 - 100
 Boss_image = pygame.image.load('Boss-ship.png')
 Boss_width, Boss_height = Boss_image.get_size()
-y_final_pos = -Boss_width/25
+y_final_pos = -Boss_width/25 + 50
 
 
 # Show the "Start" screen.
@@ -140,7 +140,7 @@ while True:
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 7900
+    score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
@@ -160,15 +160,15 @@ while True:
         if score < 1500 : 
             LEVEL = 1
         elif score >1500 and score < 1700 : 
-            LEVEL = "break"
+            LEVEL = "To level 2"
         elif score > 1700 and score < 4700 : 
            LEVEL = 2
         elif score > 4700 and score < 4900 : 
-            LEVEL = "break2"
+            LEVEL = "To level 3"
         elif score > 4900 and score < 7900 : 
             LEVEL = 3
         elif score > 7900 and score < 8100 : 
-            LEVEL = "break3"
+            LEVEL = "To Boss"
         elif score > 8100 and not LEVEL == 5 and not LEVEL == 6 : 
             LEVEL = 4
 
@@ -284,8 +284,6 @@ while True:
                         rect = a['rect']
                         bullets = Bullets.CreateNewBullet(rect, bullets, True)
         
-        print(WINDOWHEIGHT - (WINDOWHEIGHT/2 + 100))
-        
         # Move the player around.
         if moveLeft and playerRect.left > 0:
             playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
@@ -369,15 +367,15 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each ennemy, according to the level.
-        if LEVEL == "break" : 
+        if LEVEL == "To level 2" : 
             draw_box_with_text(windowSurface, 
                                "LEVEL 2", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == "break2" : 
+        elif LEVEL == "To level 3" : 
             draw_box_with_text(windowSurface, 
                                "LEVEL 3", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == "break3" : 
+        elif LEVEL == "To Boss" : 
             draw_box_with_text(windowSurface, 
                                "BOSS LEVEL", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
@@ -404,6 +402,9 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
             for a in helpers : 
                 windowSurface.blit(a['surface'], a['rect'])
+            BossShip.DrawBossBar(windowSurface, boss, WINDOWWIDTH/2, 0)
+            drawTitle("Alien Boss", font, windowSurface, WINDOWWIDTH/2, 20)
+            drawText('Helpers Used : %s /1' % (helper_check), font, windowSurface, 10, 120)
         elif LEVEL == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
             draw_box_with_text(windowSurface, 
                 "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 

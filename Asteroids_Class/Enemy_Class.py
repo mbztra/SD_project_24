@@ -190,6 +190,7 @@ class BossShip() :
     x_pos = (WINDOWWIDTH - image_width)/2
     y_pos = -image_height
     y_final_pos = -image_height/18
+    boss_health = 200
 
     def CreateNewBoss(a_list) : 
         Ship_size_x = BossShip.image_width 
@@ -197,7 +198,8 @@ class BossShip() :
         Ship_Speed = BossShip.boss_ship_speed
         x_posi = BossShip.x_pos
         y_posi = BossShip.y_pos
-        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 200,}
+        boss_life = BossShip.boss_health
+        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : boss_life,}
         a_list.append(newBoss)
         print(BossShip.image_width)
         print(WINDOWWIDTH)
@@ -219,6 +221,15 @@ class BossShip() :
             if playerRect.colliderect(a['rect']):
                 return True
         return False
+    
+    def DrawBossBar(screen, list, x, y) :
+        current_bar_width =  list[0]['life']*2
+        bar_height = 40
+        bar_width = BossShip.boss_health*2
+        x_pos = x - bar_width/2
+        pygame.draw.rect(screen, (255,0,0), (x_pos, y, current_bar_width, bar_height)) 
+        # Draw the bar outline 
+        pygame.draw.rect(screen, (255,255,255), (x_pos, y, bar_width, bar_height), 2)
     
 class Helpers() : 
     helpers_size = 50
@@ -368,7 +379,7 @@ class BossBullets :
     bullet_size = 30
     bullet_speed = 10
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    y_pos = image_height/2 + 20
+    y_pos = image_height/2 + 70
     x_pos = (WINDOWWIDTH - image_width)/2
     x_spawn = [x_pos + 60, x_pos + 120, x_pos + 180, WINDOWWIDTH - x_pos - 60, WINDOWWIDTH - x_pos - 120, WINDOWWIDTH - x_pos - 180 ]
     y_spawn = y_pos
@@ -408,7 +419,7 @@ class BossBombs :
     bomb_size = 50
     bomb_speed = 2
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    y_pos = image_height/2 + 20
+    y_pos = image_height/2 + 70
     x_pos = (WINDOWWIDTH - image_width)/2
     x_spawn = [x_pos + 250, WINDOWWIDTH - x_pos - 250 ]
     y_spawn = y_pos
