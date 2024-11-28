@@ -14,6 +14,7 @@ SpaceDroneImage = pygame.image.load('Space_Drones.png')
 AlienFighterImage = pygame.image.load('ALien_Fighter.png')
 BossShipImage = pygame.image.load('Boss-ship.png')
 BulletImage = pygame.image.load('laser_bullets.png')
+HelperBulletImage = pygame.image.load('laser_bullets_helpers.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
 MissileImage = pygame.image.load('missile.png')
@@ -248,10 +249,12 @@ class Bullets :
     bullet_size = 30
     bullet_speed = -10
 
-    def CreateNewBullet(playerRect, a_list) : 
+    def CreateNewBullet(playerRect, a_list, boolean) : 
         Bullet_size = Bullets.bullet_size
         Bullet_speed = Bullets.bullet_speed
         newBullet = {'rect': pygame.Rect(playerRect.centerx - 15, (playerRect.centery - 30), Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
+        if boolean : 
+            newBullet['surface'] = pygame.transform.scale(HelperBulletImage, (Bullet_size, Bullet_size))
         a_list.append(newBullet)
         return a_list
     

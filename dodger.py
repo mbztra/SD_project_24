@@ -195,7 +195,7 @@ while True:
                     # Create a timer to able the player to keep shooting
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
-                        bullets = Bullets.CreateNewBullet(playerRect, bullets)
+                        bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
                 if event.key == K_RETURN : 
                     if limitless : 
                         LEVEL = 6
@@ -275,14 +275,14 @@ while True:
             if score % 15 == 0 :  
                 timer += 1 
                 if len(bullets) <= add_new_bullet_rate : 
-                    bullets = Bullets.CreateNewBullet(playerRect, bullets)
+                    bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
 
         if call_for_help :
             if helper_timer > 45 : 
                 if score % 15 == 0 :
                     for a in helpers : 
                         rect = a['rect']
-                        bullets = Bullets.CreateNewBullet(rect, bullets)
+                        bullets = Bullets.CreateNewBullet(rect, bullets, True)
         
         print(WINDOWHEIGHT - (WINDOWHEIGHT/2 + 100))
         
