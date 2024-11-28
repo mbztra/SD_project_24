@@ -20,9 +20,11 @@ add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
 add_new_falcon_rate = 1
 add_new_boss_rate = 1 
+limitless_rate = 3
 LEVEL = 1
 facing = 1 
 timer = 0 
+limitless = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 
 def calculus(number) : 
@@ -159,7 +161,7 @@ while True:
            LEVEL = 2
         elif score > 4500 and score < 7500 : 
             LEVEL = 3
-        elif score > 7500 and not LEVEL == 5 : 
+        elif score > 7500 and not LEVEL == 5 and not LEVEL == 6 : 
             LEVEL = 4
 
 
@@ -188,6 +190,12 @@ while True:
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets)
+                if event.key == K_RETURN : 
+                    if limitless : 
+                        LEVEL = 6
+                        asteroids = []
+                        spacedrones = []
+                        fighters = []
 
             if event.type == KEYUP:
                 if event.key == K_z:
@@ -242,12 +250,16 @@ while True:
                 elif facing == 2 :  
                     boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 1)
                     facing = 1 
-
-
-
-
-                
-        
+        elif LEVEL == 6 : 
+            if len(asteroids) <= 5 :
+                asteroids = Asteroids.CreateNewAsteroids(asteroids)
+            if len(spacedrones) <= 2 : 
+                spacedrones = Space_Drones.CreateNewSpaceDrones(spacedrones)
+            if len(fighters) <= 1 : 
+                fighters = Alien_Fighters.CreateNewFighter(fighters)
+            if score % 60  == 0 : 
+                enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
+                    
         if timer < 15 and timer > 0 : 
             timer += 1 
         elif timer >= 15 : 
@@ -256,7 +268,6 @@ while True:
                 if len(bullets) <= add_new_bullet_rate : 
                     bullets = Bullets.CreateNewBullet(playerRect, bullets)
         
-
         # Move the player around.
         if moveLeft and playerRect.left > 0:
             playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
@@ -284,6 +295,11 @@ while True:
                     boss = BossShip.MoveBoss(boss)
             boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
             boss_missiles = BossBombs.MoveBombsToPlayer(playerRect, boss_missiles)
+        elif LEVEL == 6 : 
+            asteroids = Asteroids.MoveAsteroids(asteroids)
+            spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
+            fighters = Alien_Fighters.MoveFighter(fighters)
+            enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
          
             
 
@@ -305,6 +321,12 @@ while True:
             boss = BossShip.DeleteBoss(boss)
             boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
             boss_missiles = BossBombs.DeleteBombs(boss_missiles)
+        elif LEVEL == 6 :
+            asteroids = Asteroids.DeleteAsteroids(asteroids) 
+            spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
+            fighters = Alien_Fighters.DeleteFighter(fighters)
+            mean_bullets  = EnemyBullets.DeleteEnemyBullet(mean_bullets)
+
         
         # Now deleting the bullets 
         bullets = Bullets.DeleteBullet(bullets)
@@ -322,9 +344,6 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each ennemy, according to the level.
-        if LEVEL == 0 : 
-            for a in falcons : 
-                windowSurface.blit(a['surface'], a['rect'])
         if LEVEL == 1 : 
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
@@ -348,13 +367,19 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 5 : 
             draw_box_with_text(windowSurface, 
-                "Congrats, You've beaten the boss ! You can either stop now, or start our infinite mode to set a high score !", 
+                "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
                 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3,font_title)
-
-                
-
-
-
+            limitless = True 
+        elif LEVEL == 6 : 
+            for a in asteroids : 
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in spacedrones : 
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in fighters :
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in mean_bullets : 
+                windowSurface.blit(a['surface'], a['rect'])
+            
 
         # Drawing the Bullets 
         for a in bullets : 
@@ -400,12 +425,27 @@ while True:
             if BossBullets.playerHasHitBossBullet(playerRect, boss_bullets) : 
                 if score > topScore : 
                     topScore = score 
-                break                
+                break      
+        elif LEVEL == 6 : 
+            if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
+                if score > topScore : 
+                    topScore = score 
+                break
+            if Space_Drones.playerHasHitSpaceDrone(playerRect, spacedrones) : 
+                if score > topScore : 
+                    topScore = score 
+                break
+            if Alien_Fighters.playerHasHitFighter(playerRect, fighters) :
+                if score > topScore : 
+                    topScore = score 
+                break
+            if EnemyBullets.playerHasHitBullet(playerRect, mean_bullets) :
+                if score > topScore : 
+                    topScore = score 
+                break
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
-        if LEVEL == 0 : 
-            bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
         if LEVEL == 1 : 
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
             if len(falcons) >= 1 : 
@@ -417,6 +457,11 @@ while True:
         elif LEVEL == 4 : 
             bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
             bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
+        elif LEVEL == 6 : 
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
+
         
 
 
