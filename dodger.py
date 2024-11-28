@@ -152,11 +152,17 @@ while True:
         # The game defines on what level we are playing. 
         if score < 1500 : 
             LEVEL = 1
-        elif score > 1500 and score < 4500 : 
+        elif score >1500 and score < 1700 : 
+            LEVEL = "break"
+        elif score > 1700 and score < 4700 : 
            LEVEL = 2
-        elif score > 4500 and score < 7500 : 
+        elif score > 4700 and score < 4900 : 
+            LEVEL = "break2"
+        elif score > 4900 and score < 7900 : 
             LEVEL = 3
-        elif score > 7500 and not LEVEL == 5 and not LEVEL == 6 : 
+        elif score > 7900 and score < 8100 : 
+            LEVEL = "break3"
+        elif score > 8100 and not LEVEL == 5 and not LEVEL == 6 : 
             LEVEL = 4
 
         # We now check for every action possible 
@@ -331,7 +337,19 @@ while True:
         windowSurface.blit(playerImage, playerRect)
 
         # Draw each ennemy, according to the level.
-        if LEVEL == 1 : 
+        if LEVEL == "break" : 
+            draw_box_with_text(windowSurface, 
+                               "LEVEL 2", 
+                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
+        elif LEVEL == "break2" : 
+            draw_box_with_text(windowSurface, 
+                               "LEVEL 3", 
+                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
+        elif LEVEL == "break3" : 
+            draw_box_with_text(windowSurface, 
+                               "BOSS LEVEL", 
+                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
+        elif LEVEL == 1 : 
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
             if len(falcons) >= 1 : 
