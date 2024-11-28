@@ -13,11 +13,15 @@ add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
 add_new_falcon_rate = 1
 add_new_boss_rate = 1 
+helpers_rate = 2
 limitless_rate = 3
 LEVEL = 1
 facing = 1 
 timer = 0 
+helper_timer = 0 
+helper_check = 0
 limitless = False
+call_for_help = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 
 # Defining a few important functions 
@@ -131,11 +135,12 @@ while True:
     mean_bullets = []
     falcons = []
     boss = []
+    helpers = []
     boss_bullets = []
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 0
+    score = 7900
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
@@ -146,6 +151,8 @@ while True:
 
     while True: # The game loop runs while the game part is playing.
         score += 1  # Increase score.
+        if not helper_timer == 0 : 
+            helper_timer += 1 
         #Randomizes the chance to get the Easter Egg
         falcon_test = random.randint(1, 3000) 
 
@@ -195,6 +202,8 @@ while True:
                         asteroids = []
                         spacedrones = []
                         fighters = []
+                if event.key == K_h : 
+                    call_for_help = True 
 
             if event.type == KEYUP:
                 if event.key == K_ESCAPE:
@@ -243,6 +252,11 @@ while True:
                 elif facing == 2 :  
                     boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 1)
                     facing = 1 
+            if call_for_help : 
+                if len(helpers) < helpers_rate and helper_check == 0 : 
+                    helpers = Helpers.CallForHelpers(helpers, 0)
+                    helpers = Helpers.CallForHelpers(helpers,1)
+                    helper_timer = 1 
         elif LEVEL == 6 : #Level 6 is a limitless level, just to increase the score after the boss,
                           #and uses all types of ennemeies (appart from the boss)
             if len(asteroids) <= 5 :
@@ -262,6 +276,15 @@ while True:
                 timer += 1 
                 if len(bullets) <= add_new_bullet_rate : 
                     bullets = Bullets.CreateNewBullet(playerRect, bullets)
+
+        if call_for_help :
+            if helper_timer > 45 : 
+                if score % 15 == 0 :
+                    for a in helpers : 
+                        rect = a['rect']
+                        bullets = Bullets.CreateNewBullet(rect, bullets)
+        
+        print(WINDOWHEIGHT - (WINDOWHEIGHT/2 + 100))
         
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -290,6 +313,9 @@ while True:
                     boss = BossShip.MoveBoss(boss)
             boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
             boss_missiles = BossBombs.MoveBombsToPlayer(playerRect, boss_missiles)
+            for a in helpers : 
+                if a['rect'].y > WINDOWHEIGHT/2 + 100 : 
+                    helpers = Helpers.MoveHelpers(helpers)
         elif LEVEL == 6 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
             spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
@@ -314,6 +340,12 @@ while True:
             boss = BossShip.DeleteBoss(boss)
             boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
             boss_missiles = BossBombs.DeleteBombs(boss_missiles)
+            if helper_timer > 600 : 
+                helpers = Helpers.DeleteHelpers(helpers)
+                helper_timer = 0 
+                helper_check = 1 
+                call_for_help = False
+
         elif LEVEL == 6 :
             asteroids = Asteroids.DeleteAsteroids(asteroids) 
             spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
@@ -369,6 +401,8 @@ while True:
             for a in boss_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_missiles : 
+                windowSurface.blit(a['surface'], a['rect'])
+            for a in helpers : 
                 windowSurface.blit(a['surface'], a['rect'])
         elif LEVEL == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
             draw_box_with_text(windowSurface, 

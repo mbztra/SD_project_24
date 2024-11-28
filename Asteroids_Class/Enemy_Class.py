@@ -17,6 +17,7 @@ BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
 MissileImage = pygame.image.load('missile.png')
+HelperImage = pygame.image.load('helper.png')
 facing = "left"
 
 # The structure of each ennemy is the same ish. We have methods to create, move, 
@@ -217,6 +218,29 @@ class BossShip() :
             if playerRect.colliderect(a['rect']):
                 return True
         return False
+    
+class Helpers() : 
+    helpers_size = 50
+    helpers_speed = -4 
+    x_spawn = [WINDOWWIDTH/2 - 100, WINDOWWIDTH/2 + 100]
+
+    def CallForHelpers(a_list, facing) : 
+        Size = Helpers.helpers_size
+        Speed = Helpers.helpers_speed 
+        x_pos = Helpers.x_spawn[facing]
+        newHelper =  {'rect': pygame.Rect(x_pos, WINDOWHEIGHT, Size, Size), 'speed': Speed, 'surface':pygame.transform.scale(HelperImage, (Size, Size))}
+        a_list.append(newHelper)
+        return a_list 
+    
+    def MoveHelpers(a_list) : 
+        for a in a_list : 
+            a['rect'].move_ip(0, a['speed'])
+        return a_list
+    
+    def DeleteHelpers(a_list) : 
+        a_list = []
+        return a_list
+    
 
 # The player bullets. They have methods to create, move, delete if it's too high, and one method for each ennemy 
 # to check if it was hit by it.     
