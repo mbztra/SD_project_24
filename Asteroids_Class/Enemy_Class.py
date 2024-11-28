@@ -1,10 +1,12 @@
 import pygame, random, sys
 from pygame.locals import *
 
+#Checking the screen size to adapt the spawning of the different ennemies 
 pygame.init()
 screen_info = pygame.display.Info() 
 WINDOWWIDTH, WINDOWHEIGHT = int(screen_info.current_w), int(screen_info.current_h)
 
+# Loading all od the images 
 AsteroidImage = pygame.image.load('Asteroids2.png')
 AsteroidImageRight = pygame.image.load('Asteroids2_right.png')
 AsteroidImageLeft = pygame.image.load('Asteroids2_left.png')
@@ -15,8 +17,11 @@ BulletImage = pygame.image.load('laser_bullets.png')
 EnemyBulletImage = pygame.image.load('laser_bullets_enemy.png')
 FalconImage = pygame.image.load('falcon.png')
 MissileImage = pygame.image.load('missile.png')
-reverseCheat = slowCheat = False
 facing = "left"
+
+# The structure of each ennemy is the same ish. We have methods to create, move, 
+# destroy if it touches the bottom, and check if it got shot. 
+# However, they all have specificities that I'll be commenting on. 
 
 class Asteroids : 
     asteroids_min_size = 20
@@ -27,6 +32,8 @@ class Asteroids :
     def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
         newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)), 'behaviour' : random.randint(1,5)}
+        
+        # This makes so that the asteroids can go diagonal, and that their image will switch directions accordingly
         if newAsteroid['behaviour'] == 5 : 
             if newAsteroid['rect'].x > WINDOWWIDTH/2 : 
                 newAsteroid['facing'] = "left"
@@ -42,18 +49,11 @@ class Asteroids :
     def MoveAsteroids (a_list2) :
         for a in a_list2:
             if a['behaviour'] < 5 : 
-                if not reverseCheat and not slowCheat:
-                    a['rect'].move_ip(0, a['speed'])
-                elif reverseCheat:
-                    a['rect'].move_ip(0, -5)
-                elif slowCheat:
-                    a['rect'].move_ip(0, 1)
+                a['rect'].move_ip(0, a['speed'])
             elif a['behaviour'] == 5 and a['facing'] == "right":
-                if not reverseCheat and not slowCheat:
-                    a['rect'].move_ip(a['speed']/2, a['speed'])
+                a['rect'].move_ip(a['speed']/2, a['speed'])
             elif a['behaviour'] == 5 and a['facing'] == "left" :
-                if not reverseCheat and not slowCheat : 
-                    a['rect'].move_ip(-a['speed'], a['speed'])
+                a['rect'].move_ip(-a['speed'], a['speed'])
         return a_list2
     
     def DeleteAsteroids(asteroids_list2) :
@@ -64,6 +64,37 @@ class Asteroids :
     
 
     def playerHasHitAsteroids(playerRect, asteroids):
+        for a in asteroids:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+    
+# Our easter egg. It appears (on average) once every 2 games. 
+# It can only appear in the 1st Level, and only 1 by game. 
+# When destroyed, it will bump the score enough to go directly to Level 3. 
+class millenium_falcon : 
+    falcon_size = 50
+    falcon_speed = 2  
+
+    def CreateNewFalcon(a_list) : 
+        Falcon_size = millenium_falcon.falcon_size
+        Falcon_speed = millenium_falcon.falcon_speed
+        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, 2.2 * Falcon_size)),}
+        a_list.append(newFalcon)
+        return a_list
+
+    def MoveFalcon (a_list2) :
+        for a in a_list2: 
+            a['rect'].move_ip(0, a['speed'])
+        return a_list2
+    
+    def DeleteFalcon(asteroids_list2) :
+        for a in asteroids_list2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                asteroids_list2.remove(a)
+        return asteroids_list2
+
+    def playerHasHitFlacon(playerRect, asteroids):
         for a in asteroids:
             if playerRect.colliderect(a['rect']):
                 return True
@@ -83,16 +114,7 @@ class Space_Drones :
         a_list.append(newSpaceDrone)
         return a_list
     
-    def MoveSpaceDrones (a_list2) :
-        for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
-        return a_list2
-    
+    # This function allows our Level 2 Ennemies to be "intelligent" (AKA, they try to reach the player)
     def MoveSpaceDronesToPlayer (playerRect, a_list2) : 
         for a in a_list2 : 
             if playerRect.centerx > a['rect'].x : 
@@ -103,7 +125,6 @@ class Space_Drones :
                 a['rect'].move_ip(0, a['speed'])
         return a_list2
 
-    
     def DeleteSpaceDrones(spacedrones_list2) :
         for a in spacedrones_list2[:] :
             if a['rect'].top > WINDOWHEIGHT:
@@ -135,9 +156,11 @@ class Alien_Fighters :
         a_list.append(newFighter)
         return a_list
     
+    # Our Level 3 ennemies, like the asteroids, need a "facing". This will allow them to go in the opposite side 
+    # of the screen, rather than going diagonal in the same direction they are, which makes them disappear too fast. 
     def MoveFighter (a_list2) :
         for a in a_list2:
-            if not reverseCheat and not slowCheat and a['facing'] == "right":
+            if a['facing'] == "right":
                 a['rect'].move_ip(a['speed']/2, a['speed'])
             if a['facing'] == "left" : 
                 a['rect'].move_ip(-a['speed']/2, a['speed'])
@@ -155,6 +178,48 @@ class Alien_Fighters :
                 return True
         return False
     
+
+# Our Boss class. It can be created (only 1), moved, destroyed if it reaches the bottom. 
+# It has a "LIFE" parameter. It is it's health points. The amount of bullets needed to take it down. 
+class BossShip() : 
+    boss_ship_size = 500
+    boss_ship_speed = 10
+    image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
+    x_pos = (WINDOWWIDTH - image_width)/2
+    y_pos = -image_height
+    y_final_pos = -image_height/18
+
+    def CreateNewBoss(a_list) : 
+        Ship_size_x = BossShip.image_width 
+        Ship_size_y = BossShip.image_height 
+        Ship_Speed = BossShip.boss_ship_speed
+        x_posi = BossShip.x_pos
+        y_posi = BossShip.y_pos
+        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 200,}
+        a_list.append(newBoss)
+        print(BossShip.image_width)
+        print(WINDOWWIDTH)
+        return a_list
+    
+    def MoveBoss (a_list2) :
+        for a in a_list2:
+            a['rect'].move_ip(0, a['speed'])
+        return a_list2
+    
+    def DeleteBoss(list_2) :
+        for a in list_2[:] :
+            if a['rect'].top > WINDOWHEIGHT:
+                list_2.remove(a)
+        return list_2
+    
+    def playerHasHitBoss(playerRect, boss):
+        for a in boss:
+            if playerRect.colliderect(a['rect']):
+                return True
+        return False
+
+# The player bullets. They have methods to create, move, delete if it's too high, and one method for each ennemy 
+# to check if it was hit by it.     
 class Bullets : 
     bullet_size = 30
     bullet_speed = -10
@@ -167,13 +232,8 @@ class Bullets :
         return a_list
     
     def MoveBullet (a_list2) :
-        for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
+        for a in a_list2 : 
+            a['rect'].move_ip(0, a['speed'])
         return a_list2
     
     def DeleteBullet(bullet_list2) :
@@ -239,9 +299,11 @@ class Bullets :
                 if b['rect'].colliderect(a['rect']):
                     boss_missiles.remove(a)
                     bullets.remove(b)
-                    score = 5000
         return bullets, boss_missiles
 
+# The bullets that the Level 3 Ennemies can shoot. They behave the same way as a normal ennemy,
+# appart from their spawn place, as they spawn just under the ennemy "shooting" it. 
+# They cannot be destroyed by the player's bullets. 
 class EnemyBullets : 
     bullet_size = 30
     bullet_speed = 10
@@ -255,13 +317,8 @@ class EnemyBullets :
         return a_list
     
     def MoveEnemyBullet (a_list2) :
-        for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
+        for a in a_list2 : 
+            a['rect'].move_ip(0, a['speed'])
         return a_list2
     
     def DeleteEnemyBullet(bullet_list2) :
@@ -276,78 +333,10 @@ class EnemyBullets :
                 return True
         return False
     
-class millenium_falcon : 
-    falcon_size = 50
-    falcon_speed = 2  
-
-    def CreateNewFalcon(a_list) : 
-        Falcon_size = millenium_falcon.falcon_size
-        Falcon_speed = millenium_falcon.falcon_speed
-        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, 2.2 * Falcon_size)),}
-        a_list.append(newFalcon)
-        return a_list
-
-    def MoveFalcon (a_list2) :
-        for a in a_list2: 
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
-        return a_list2
-    
-    def DeleteFalcon(asteroids_list2) :
-        for a in asteroids_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
-                asteroids_list2.remove(a)
-        return asteroids_list2
-    
-
-    def playerHasHitFlacon(playerRect, asteroids):
-        for a in asteroids:
-            if playerRect.colliderect(a['rect']):
-                return True
-        return False
-
-
-class BossShip() : 
-    boss_ship_size = 500
-    boss_ship_speed = 10
-    image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    x_pos = (WINDOWWIDTH - image_width)/2
-    y_pos = -image_height
-    y_final_pos = -image_height/18
-
-    def CreateNewBoss(a_list) : 
-        Ship_size_x = BossShip.image_width 
-        Ship_size_y = BossShip.image_height 
-        Ship_Speed = BossShip.boss_ship_speed
-        x_posi = BossShip.x_pos
-        y_posi = BossShip.y_pos
-        newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : 50,}
-        a_list.append(newBoss)
-        print(BossShip.image_width)
-        print(WINDOWWIDTH)
-        return a_list
-    
-    def MoveBoss (a_list2) :
-        for a in a_list2:
-            a['rect'].move_ip(0, a['speed'])
-        return a_list2
-    
-    def DeleteBoss(list_2) :
-        for a in list_2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
-                list_2.remove(a)
-        return list_2
-    
-    def playerHasHitBoss(playerRect, boss):
-        for a in boss:
-            if playerRect.colliderect(a['rect']):
-                return True
-        return False
-    
+# The bullets that the boss can shoot. I thought about using the classic "ennemy bullets", but seeing as they are 
+# limited to one spawn point, i added this new class. 
+# They are shot from 6 different places from the boss, detailed in x_spawn.    
+# They cannot be destroyed by the player's bullets
 class BossBullets : 
     bullet_size = 30
     bullet_speed = 10
@@ -367,12 +356,7 @@ class BossBullets :
     
     def MoveBossBullet (a_list2) :
         for a in a_list2:
-            if not reverseCheat and not slowCheat:
-                a['rect'].move_ip(0, a['speed'])
-            elif reverseCheat:
-                a['rect'].move_ip(0, -5)
-            elif slowCheat:
-                a['rect'].move_ip(0, 1)
+            a['rect'].move_ip(0, a['speed'])
         return a_list2
     
     def DeleteBossBullet(bullet_list2) :
@@ -387,7 +371,12 @@ class BossBullets :
                 return True
         return False
 
-
+# These bombs are shot by the boss. 
+# They are chasing the player to make the boss harder. 
+# They can spawn from two different points on the boss, detailed in x_spawn. 
+# When created, they need a "facing" to tell them on which side they get shot from. 
+# I did it this way to be able to alternate the spawn points in the main loop.
+# They can be destroyed by the players bullets. 
 class BossBombs : 
     bomb_size = 50
     bomb_speed = 2
