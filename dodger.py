@@ -202,6 +202,7 @@ while True:
                         asteroids = []
                         spacedrones = []
                         fighters = []
+                        mean_bullets = []
                 if event.key == K_h : 
                     call_for_help = True 
 
