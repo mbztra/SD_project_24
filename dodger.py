@@ -1,15 +1,8 @@
 import pygame, random, sys
 from pygame.locals import *
-from Asteroids_Class.Enemy_Class import Asteroids
-from Asteroids_Class.Enemy_Class import Space_Drones
-from Asteroids_Class.Enemy_Class import Alien_Fighters
-from Asteroids_Class.Enemy_Class import Bullets
-from Asteroids_Class.Enemy_Class import EnemyBullets
-from Asteroids_Class.Enemy_Class import millenium_falcon
-from Asteroids_Class.Enemy_Class import BossShip
-from Asteroids_Class.Enemy_Class import BossBullets
-from Asteroids_Class.Enemy_Class import BossBombs
+from Asteroids_Class.Enemy_Class import *
 
+# Defining all the important variables for later 
 TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
@@ -27,11 +20,7 @@ timer = 0
 limitless = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 
-def calculus(number) : 
-    result = type(number/15)
-    return result
-
-
+# Defining a few important functions 
 def terminate():
     pygame.quit()
     sys.exit()
@@ -94,7 +83,8 @@ screen_info = pygame.display.Info()
 WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
 
-pygame.display.set_caption('Dodger')
+#Defines the name of the window 
+pygame.display.set_caption('Galaxy Guardian')
 pygame.mouse.set_visible(False)
 
 # Set up the fonts.
@@ -132,6 +122,8 @@ waitForPlayerToPressKey()
 topScore = 0
 while True:
     # Set up the start of the game.
+
+    # Set up the lists of all ennemies 
     asteroids = []
     spacedrones = []
     fighters = []
@@ -141,20 +133,23 @@ while True:
     boss = []
     boss_bullets = []
     boss_missiles = []
+
+    #Set up Score and Player 
     score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
+
+    #Set up the movement and music 
     moveLeft = moveRight = moveUp = moveDown = False
-    reverseCheat = slowCheat = False
     pygame.mixer.music.play(-1, 0.0)
     volume = 1
     pygame.mixer.music.set_volume(volume)
 
     while True: # The game loop runs while the game part is playing.
         score += 1  # Increase score.
+        #Randomizes the chance to get the Easter Egg
         falcon_test = random.randint(1, 3000) 
 
         # The game defines on what level we are playing. 
-
         if score < 1500 : 
             LEVEL = 1
         elif score > 1500 and score < 4500 : 
@@ -164,16 +159,13 @@ while True:
         elif score > 7500 and not LEVEL == 5 and not LEVEL == 6 : 
             LEVEL = 4
 
+        # We now check for every action possible 
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
 
             if event.type == KEYDOWN:
-                if event.key == K_z:
-                    reverseCheat = True
-                if event.key == K_x:
-                    slowCheat = True
                 if event.key == K_LEFT or event.key == K_a:
                     moveRight = False
                     moveLeft = True
@@ -187,6 +179,7 @@ while True:
                     moveUp = False
                     moveDown = True
                 if event.key == K_SPACE : 
+                    # Create a timer to able the player to keep shooting
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets)
@@ -198,12 +191,6 @@ while True:
                         fighters = []
 
             if event.type == KEYUP:
-                if event.key == K_z:
-                    reverseCheat = False
-                    score = 0
-                if event.key == K_x:
-                    slowCheat = False
-                    score = 0
                 if event.key == K_ESCAPE:
                         terminate()
 
@@ -216,6 +203,7 @@ while True:
                 if event.key == K_DOWN or event.key == K_s:
                     moveDown = False
                 if event.key == K_SPACE : 
+                    # Reinitialise the timer so the player stops shooting
                     timer = 0 
 
             if event.type == MOUSEMOTION:
@@ -225,7 +213,6 @@ while True:
 
         # Add new enemies at the top of the screen, if needed.
         # It will check what level we are playing and will display the correct ennemies. 
-
         if LEVEL == 1 : 
             if len(asteroids) <= add_new_asteroid_rate :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
@@ -250,7 +237,8 @@ while True:
                 elif facing == 2 :  
                     boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 1)
                     facing = 1 
-        elif LEVEL == 6 : 
+        elif LEVEL == 6 : #Level 6 is a limitless level, just to increase the score after the boss,
+                          #and uses all types of ennemeies (appart from the boss)
             if len(asteroids) <= 5 :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
             if len(spacedrones) <= 2 : 
@@ -259,7 +247,8 @@ while True:
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
             if score % 60  == 0 : 
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
-                    
+
+        # Here comes the timer. It allows the player to keep shooting if they maintain the key pressed.
         if timer < 15 and timer > 0 : 
             timer += 1 
         elif timer >= 15 : 
@@ -301,13 +290,11 @@ while True:
             fighters = Alien_Fighters.MoveFighter(fighters)
             enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
          
-            
-
-        # Now moving the bullets.     
+        # Now moving the bullets. Seperated because they will appear on every level.   
         bullets = Bullets.MoveBullet(bullets)
 
         # Delete ennemies that have fallen past the bottom.
-        # Once again, checks the level.)
+        # Once again, checks the level.
         if LEVEL == 1 : 
             asteroids = Asteroids.DeleteAsteroids(asteroids)
             if len(falcons) >= 1 : 
@@ -365,7 +352,7 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_missiles : 
                 windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 5 : 
+        elif LEVEL == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
             draw_box_with_text(windowSurface, 
                 "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
                 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3,font_title)
@@ -380,12 +367,10 @@ while True:
             for a in mean_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
             
-
         # Drawing the Bullets 
         for a in bullets : 
             windowSurface.blit(a['surface'], a['rect'])
 
-            
         pygame.display.update()
 
         # Check if any of the ennemies have hit the player.
