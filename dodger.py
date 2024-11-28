@@ -56,8 +56,32 @@ def drawTitle(text, font, surface, x, y):
     textrect1.center = (x, y)
     surface.blit(textobj1, textrect1)
 
-mouse_pressed = pygame.mouse.get_pressed()
+def draw_box_with_text(screen, text, x, y, width, height, font): 
+    words = text.split(' ') 
+    lines = [] 
+    current_line = words[0] 
 
+    for word in words[1:]: 
+        # Check if the current line with the next word fits within the box width 
+        if font.size(current_line + ' ' + word)[0] <= width - 20: 
+            # Add some padding 
+            current_line += ' ' + word 
+        else: 
+            lines.append(current_line) 
+            current_line = word 
+    lines.append(current_line) 
+
+    total_text_height = len(lines) * font.get_height()
+    start_y = y + (height - total_text_height) // 2
+
+    pygame.draw.rect(screen, (0,0,0), (x, y, width, height)) 
+    pygame.draw.rect(screen, (255,255,255), (x, y, width, height), 2) 
+    # Render each line and blit it to the screen
+    for i, line in enumerate(lines): 
+        text_surface = font.render(line, True, (255,255,255)) 
+        text_rect = text_surface.get_rect(center=(x + width // 2, start_y + i * font.get_height()))
+        # Adjust the position with some padding 
+        screen.blit(text_surface, text_rect)
 
 # Set up pygame, the window, and the mouse cursor.
 pygame.init()
@@ -322,6 +346,11 @@ while True:
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_missiles : 
                 windowSurface.blit(a['surface'], a['rect'])
+        elif LEVEL == 5 : 
+            draw_box_with_text(windowSurface, 
+                "Congrats, You've beaten the boss ! You can either stop now, or start our infinite mode to set a high score !", 
+                0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3,font_title)
+
                 
 
 
