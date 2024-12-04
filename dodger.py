@@ -23,6 +23,8 @@ helper_check = 0
 limitless = False
 call_for_help = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
+pause = False
+LVL = 0  
 
 # Defining a few important functions 
 def terminate():
@@ -150,7 +152,7 @@ while True:
     pygame.mixer.music.set_volume(volume)
 
     while True: # The game loop runs while the game part is playing.
-        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 :
+        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 and not LEVEL == "PAUSE":
             score += 1  # Increase score.
         if not helper_timer == 0 : 
             helper_timer += 1 
@@ -158,7 +160,10 @@ while True:
         falcon_test = random.randint(1, 3000) 
 
         # The game defines on what level we are playing. 
-        if score < 1500 : 
+        if pause : 
+            LEVEL = "PAUSE"
+            LVL = LEVEL
+        elif score < 1500 : 
             LEVEL = 1
         elif score > 1500 and score < 1510 : 
             LEVEL = "To level 2"
@@ -180,18 +185,22 @@ while True:
                 terminate()
 
             if event.type == KEYDOWN:
-                if event.key == K_LEFT or event.key == K_a:
-                    moveRight = False
-                    moveLeft = True
+                if event.key == K_LEFT or event.key == K_a :
+                    if not LEVEL == "PAUSE" : 
+                        moveRight = False
+                        moveLeft = True
                 if event.key == K_RIGHT or event.key == K_d:
-                    moveLeft = False
-                    moveRight = True
+                    if not LEVEL == "PAUSE" :
+                        moveLeft = False
+                        moveRight = True
                 if event.key == K_UP or event.key == K_w:
-                    moveDown = False
-                    moveUp = True
+                    if not LEVEL == "PAUSE" :
+                        moveDown = False
+                        moveUp = True
                 if event.key == K_DOWN or event.key == K_s:
-                    moveUp = False
-                    moveDown = True
+                    if not LEVEL == "PAUSE" :
+                        moveUp = False
+                        moveDown = True
                 if event.key == K_SPACE : 
                     # Create a timer to able the player to keep shooting
                     timer = 1 
@@ -215,6 +224,12 @@ while True:
                         mean_bullets = []
                 if event.key == K_h : 
                     call_for_help = True 
+                if event.key == K_LCTRL : 
+                    if pause == True : 
+                        pause = False 
+                        LEVEL = LVL
+                    else : 
+                        pause = True 
 
             if event.type == KEYUP:
                 if event.key == K_ESCAPE:
