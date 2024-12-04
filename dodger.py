@@ -150,7 +150,8 @@ while True:
     pygame.mixer.music.set_volume(volume)
 
     while True: # The game loop runs while the game part is playing.
-        score += 1  # Increase score.
+        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 :
+            score += 1  # Increase score.
         if not helper_timer == 0 : 
             helper_timer += 1 
         #Randomizes the chance to get the Easter Egg
@@ -159,17 +160,17 @@ while True:
         # The game defines on what level we are playing. 
         if score < 1500 : 
             LEVEL = 1
-        elif score >1500 and score < 1700 : 
+        elif score > 1500 and score < 1510 : 
             LEVEL = "To level 2"
-        elif score > 1700 and score < 4700 : 
+        elif score > 1510 and score < 4500 : 
            LEVEL = 2
-        elif score > 4700 and score < 4900 : 
+        elif score > 4500 and score < 4510 : 
             LEVEL = "To level 3"
-        elif score > 4900 and score < 7900 : 
+        elif score > 4510 and score < 7500 : 
             LEVEL = 3
-        elif score > 7900 and score < 8100 : 
+        elif score > 7500 and score < 7510 : 
             LEVEL = "To Boss"
-        elif score > 8100 and not LEVEL == 5 and not LEVEL == 6 : 
+        elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 : 
             LEVEL = 4
 
         # We now check for every action possible 
@@ -197,6 +198,15 @@ while True:
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
                 if event.key == K_RETURN : 
+                    if LEVEL == "To level 2" : 
+                        LEVEL = 2 
+                        score = 1510
+                    elif LEVEL == "To level 3" : 
+                        LEVEL = 3 
+                        score = 4510
+                    elif LEVEL == "To Boss" : 
+                        LEVEL = 4
+                        score = 7510
                     if limitless : 
                         LEVEL = 6
                         asteroids = []
@@ -370,15 +380,15 @@ while True:
         # Draw each ennemy, according to the level.
         if LEVEL == "To level 2" : 
             draw_box_with_text(windowSurface, 
-                               "LEVEL 2", 
+                               "LEVEL 2 (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
         elif LEVEL == "To level 3" : 
             draw_box_with_text(windowSurface, 
-                               "LEVEL 3", 
+                               "LEVEL 3 (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
         elif LEVEL == "To Boss" : 
             draw_box_with_text(windowSurface, 
-                               "BOSS LEVEL", 
+                               "BOSS LEVEL (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
         elif LEVEL == 1 : 
             for a in asteroids : 
