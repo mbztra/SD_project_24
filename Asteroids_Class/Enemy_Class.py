@@ -287,6 +287,8 @@ class Bullets :
                     asteroids.remove(a)
                     bullets.remove(b)
                     score += 50
+                    if score > 1500 : 
+                        score = 1501
         return bullets, asteroids, score
     
 
@@ -297,6 +299,8 @@ class Bullets :
                     spacedrones.remove(a)
                     bullets.remove(b)
                     score += 100
+                    if score > 4500 : 
+                        score = 4500
         return bullets, spacedrones, score 
 
     def BulletHasHitFighter(bullets, fighters, score):
@@ -306,6 +310,8 @@ class Bullets :
                     fighters.remove(a)
                     bullets.remove(b)
                     score += 200
+                    if score > 7500 : 
+                        score = 4500
         return bullets, fighters, score
     
     def BulletHasHitFalcon(bullets, fighters, score):
