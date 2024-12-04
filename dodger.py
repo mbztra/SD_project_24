@@ -405,21 +405,21 @@ while True:
             draw_box_with_text(windowSurface, 
                                "BOSS LEVEL (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == 1 : 
+        elif LEVEL == 1 or LEVEL == "PAUSE": 
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
             if len(falcons) >= 1 : 
                 for a in falcons : 
                     windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 2 : 
+        elif LEVEL == 2 or LEVEL == "PAUSE": 
             for a in spacedrones : 
                 windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 3 : 
+        elif LEVEL == 3 or LEVEL == "PAUSE": 
             for a in fighters :
                 windowSurface.blit(a['surface'], a['rect'])
             for a in mean_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 4 : 
+        elif LEVEL == 4 or LEVEL == "PAUSE": 
             for a in boss : 
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_bullets : 
@@ -436,7 +436,7 @@ while True:
                 "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
                 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3,font_title)
             limitless = True 
-        elif LEVEL == 6 : 
+        elif LEVEL == 6 or LEVEL == "PAUSE": 
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
             for a in spacedrones : 
