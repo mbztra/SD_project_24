@@ -363,7 +363,7 @@ class Bullets :
                     score = 5000
         return bullets, fighters, score
     
-    def BulletHasHitBoss(bullets, boss, score, LEVEL):
+    def BulletHasHitBoss(bullets, boss, score, LEVEL, boss_dead):
         for a in boss :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
@@ -374,8 +374,9 @@ class Bullets :
                         boss.remove(a)
                         bullets.remove(b)
                         LEVEL = 5
+                        boss_dead = True
                         score += 3000
-        return bullets, boss, score, LEVEL
+        return bullets, boss, score, LEVEL, boss_dead
     
     def BulletHasHitBomb(bullets, boss_missiles,):
         for a in boss_missiles :

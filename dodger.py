@@ -12,7 +12,7 @@ add_new_falcon_rate = 1
 add_new_boss_rate = 1 
 helpers_rate = 2
 limitless_rate = 3
-LEVEL = 6
+LEVEL = 0
 facing = 1 
 timer = 0 
 helper_timer = 0 
@@ -24,6 +24,7 @@ pause = False
 LVL = 0  
 boss_facing = "left"
 difficulty = 0 
+boss_dead = False 
 
 # Defining a few important functions 
 def terminate():
@@ -125,7 +126,7 @@ pygame.display.update()
 waitForPlayerToPressKey()
 
 topScore = 0
-while True:
+while True : 
     # Set up the start of the game.
 
     # Set up the lists of all ennemies 
@@ -141,7 +142,7 @@ while True:
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 7600
+    score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
@@ -162,8 +163,8 @@ while True:
 
         # The game defines on what level we are playing. 
         if pause : 
-            LEVEL = "PAUSE"
             LVL = LEVEL
+            LEVEL = "PAUSE"
         elif score < 1500 and not LEVEL == 0 : 
             LEVEL = 1
         elif score > 1500 and score < 1510 : 
@@ -178,6 +179,8 @@ while True:
             LEVEL = "To Boss"
         elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 and not LEVEL == "PAUSE" : 
             LEVEL = 4
+        elif score > 7510 and boss_dead and not LEVEL == 5 : 
+            LEVEL = 6 
 
         # We now check for every action possible 
 
@@ -228,8 +231,6 @@ while True:
                 if event.key == K_LCTRL : 
                     if pause == True : 
                         pause = False
-                        if limitless : 
-                            LEVEL = 6
                         LEVEL = LVL
                     else : 
                         pause = True 
@@ -554,7 +555,7 @@ while True:
         elif LEVEL == 3 :
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
         elif LEVEL == 4 :  
-            bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
+            bullets, boss, score, LEVEL, boss_dead = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL, boss_dead)
             bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
         elif LEVEL == 6 :
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, LEVEL)
