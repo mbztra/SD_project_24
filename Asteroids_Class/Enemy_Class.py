@@ -320,37 +320,37 @@ class Bullets :
 
 
     
-    def BulletHasHitAsteroids(bullets, asteroids, score) :
+    def BulletHasHitAsteroids(bullets, asteroids, score, LEVEL) :
         for a in asteroids :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
                     asteroids.remove(a)
                     bullets.remove(b)
                     score += 50
-                    if score > 1500 : 
+                    if score > 1500 and LEVEL == 1 : 
                         score = 1501
         return bullets, asteroids, score
     
 
-    def BulletHasHitDrones(bullets, spacedrones, score) : 
+    def BulletHasHitDrones(bullets, spacedrones, score, LEVEL) : 
         for a in spacedrones :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
                     spacedrones.remove(a)
                     bullets.remove(b)
                     score += 100
-                    if score > 4500 : 
+                    if score > 4500 and LEVEL == 2 : 
                         score = 4500
         return bullets, spacedrones, score 
 
-    def BulletHasHitFighter(bullets, fighters, score):
+    def BulletHasHitFighter(bullets, fighters, score, LEVEL):
         for a in fighters :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
                     fighters.remove(a)
                     bullets.remove(b)
                     score += 200
-                    if score > 7500 : 
+                    if score > 7500 and LEVEL == 3 : 
                         score = 7500
         return bullets, fighters, score
     

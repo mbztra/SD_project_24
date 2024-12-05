@@ -12,7 +12,7 @@ add_new_falcon_rate = 1
 add_new_boss_rate = 1 
 helpers_rate = 2
 limitless_rate = 3
-LEVEL = 0
+LEVEL = 6
 facing = 1 
 timer = 0 
 helper_timer = 0 
@@ -141,7 +141,7 @@ while True:
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 0
+    score = 7600
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
@@ -176,7 +176,7 @@ while True:
             LEVEL = 3
         elif score > 7500 and score < 7510 : 
             LEVEL = "To Boss"
-        elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 : 
+        elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 and not LEVEL == "PAUSE" : 
             LEVEL = 4
 
         # We now check for every action possible 
@@ -227,7 +227,9 @@ while True:
                     call_for_help = True 
                 if event.key == K_LCTRL : 
                     if pause == True : 
-                        pause = False 
+                        pause = False
+                        if limitless : 
+                            LEVEL = 6
                         LEVEL = LVL
                     else : 
                         pause = True 
@@ -544,20 +546,20 @@ while True:
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
         if LEVEL == 1 : 
-            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, LEVEL)
             if len(falcons) >= 1 : 
                 bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
         elif LEVEL == 2 :               
-            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, LEVEL)
         elif LEVEL == 3 :
-            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
-        elif LEVEL == 4 : 
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
+        elif LEVEL == 4 :  
             bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
             bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
         elif LEVEL == 6 :
-            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
-            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
-            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, LEVEL)
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, LEVEL)
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
 
         
 
