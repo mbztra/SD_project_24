@@ -7,9 +7,6 @@ TEXTCOLOR = (255, 255, 255)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERMOVERATE = 5
-add_new_asteroid_rate = 10
-add_new_spacedrone_rate = 10
-add_new_fighter_rate = 10
 add_new_bullet_rate = 5 
 add_new_falcon_rate = 1
 add_new_boss_rate = 1 
@@ -26,6 +23,7 @@ AsteroidImage = pygame.image.load('Asteroids2.png')
 pause = False
 LVL = 0  
 difficulty = 1 
+boss_facing = "left"
 
 if difficulty == 1 : 
     add_new_asteroid_rate = 5
@@ -156,7 +154,7 @@ while True:
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 0
+    score = 7510
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
@@ -298,17 +296,17 @@ while True:
             if len(boss) < add_new_boss_rate : 
                 boss = BossShip.CreateNewBoss(boss)
             if score % 30 == 0 : 
-                boss_bullets = BossBullets.BossShoot(boss_bullets)
+                boss_bullets = BossBullets.BossShoot(boss_bullets, boss)
                 if len(boss_missiles) < 2 : 
-                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 2)
+                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, boss, 2)
                     facing = 2
                 elif facing == 2 :  
-                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, 1)
+                    boss_missiles = BossBombs.BossShootsBombs(boss_missiles, boss, 1)
                     facing = 1 
             if call_for_help : 
                 if len(helpers) < helpers_rate and helper_check == 0 : 
-                    helpers = Helpers.CallForHelpers(helpers, 0)
-                    helpers = Helpers.CallForHelpers(helpers,1)
+                    helpers = Helpers.CallForHelpers(helpers, boss, 0)
+                    helpers = Helpers.CallForHelpers(helpers, boss, 1)
                     helper_timer = 1 
         elif LEVEL == 6 : #Level 6 is a limitless level, just to increase the score after the boss,
                           #and uses all types of ennemeies (appart from the boss)
@@ -359,9 +357,16 @@ while True:
             fighters = Alien_Fighters.MoveFighter(fighters)
             enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
         elif LEVEL == 4 : 
+            boss_facing = BossShip.CheckFacing(boss, boss_facing)
             for a in boss : 
                 if a['rect'].y < y_final_pos :  
                     boss = BossShip.MoveBoss(boss)
+                elif boss_facing == "left" : 
+                    boss = BossShip.MoveBossLeft(boss)
+                    helpers = Helpers.MoveHelpersLeft(helpers, boss)
+                elif boss_facing == "right" : 
+                    boss = BossShip.MoveBossRight(boss)
+                    helpers = Helpers.MoveHelpersRight(helpers, boss)
             boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
             boss_missiles = BossBombs.MoveBombsToPlayer(playerRect, boss_missiles)
             for a in helpers : 

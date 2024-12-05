@@ -187,14 +187,17 @@ class BossShip() :
     boss_ship_size = 500
     boss_ship_speed = 10
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    x_pos = (WINDOWWIDTH - image_width)/2
-    y_pos = -image_height
-    y_final_pos = -image_height/18
+    boss_ratio = image_width/image_height
+    new_height = WINDOWHEIGHT/2.5
+    new_width = new_height*boss_ratio
+    x_pos = (WINDOWWIDTH - new_width)/2
+    y_pos = -new_height
+    y_final_pos = -new_height/18
     boss_health = 200
 
     def CreateNewBoss(a_list) : 
-        Ship_size_x = BossShip.image_width 
-        Ship_size_y = BossShip.image_height 
+        Ship_size_x = BossShip.new_width
+        Ship_size_y = BossShip.new_height
         Ship_Speed = BossShip.boss_ship_speed
         x_posi = BossShip.x_pos
         y_posi = BossShip.y_pos
@@ -209,6 +212,24 @@ class BossShip() :
         for a in a_list2:
             a['rect'].move_ip(0, a['speed'])
         return a_list2
+    
+    def MoveBossRight (list2) : 
+        for a in list2 : 
+            a['rect'].move_ip(a['speed']/8, 0)
+        return list2
+    
+    def MoveBossLeft (list2) : 
+        for a in list2 : 
+            a['rect'].move_ip(-a['speed']/8, 0)
+        return list2
+    
+    def CheckFacing (list, facing) : 
+        for a in list : 
+            if a['rect'].x < 0 : 
+                facing = "right"
+            if a['rect'].x + BossShip.new_width > WINDOWWIDTH : 
+                facing = "left"
+        return facing 
     
     def DeleteBoss(list_2) :
         for a in list_2[:] :
@@ -236,10 +257,13 @@ class Helpers() :
     helpers_speed = -4 
     x_spawn = [WINDOWWIDTH/2 - 100, WINDOWWIDTH/2 + 100]
 
-    def CallForHelpers(a_list, facing) : 
+    def CallForHelpers(a_list, boss, facing) : 
+        for a in boss : 
+            x_pos = a['rect'].x 
+        x_spawn = [x_pos + BossShip.new_width*0.4, x_pos + BossShip.new_width*0.6 ]
         Size = Helpers.helpers_size
         Speed = Helpers.helpers_speed 
-        x_pos = Helpers.x_spawn[facing]
+        x_pos = x_spawn[facing]
         newHelper =  {'rect': pygame.Rect(x_pos, WINDOWHEIGHT, Size, Size), 'speed': Speed, 'surface':pygame.transform.scale(HelperImage, (Size, Size))}
         a_list.append(newHelper)
         return a_list 
@@ -249,6 +273,20 @@ class Helpers() :
             a['rect'].move_ip(0, a['speed'])
         return a_list
     
+    def MoveHelpersRight(list, boss) : 
+        for a in boss : 
+            speed = a['speed']
+        for a in list : 
+            a['rect'].move_ip(speed/8, 0)
+        return list
+
+    def MoveHelpersLeft(list, boss) : 
+        for a in boss : 
+            speed = a['speed']
+        for a in list : 
+            a['rect'].move_ip(-speed/8, 0)  
+        return list
+
     def DeleteHelpers(a_list) : 
         a_list = []
         return a_list
@@ -387,13 +425,18 @@ class BossBullets :
     bullet_size = 30
     bullet_speed = 10
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    y_pos = image_height/2 + 70
-    x_pos = (WINDOWWIDTH - image_width)/2
-    x_spawn = [x_pos + 60, x_pos + 120, x_pos + 180, WINDOWWIDTH - x_pos - 60, WINDOWWIDTH - x_pos - 120, WINDOWWIDTH - x_pos - 180 ]
-    y_spawn = y_pos
+    y_pos = BossShip.y_final_pos
+    x_pos = BossShip.x_pos
+    y_spawn = y_pos + BossShip.new_height/1.2
+    boss_size = BossShip.new_width
 
-    def BossShoot(a_list) : 
-        for a in BossBullets.x_spawn : 
+    def BossShoot(a_list, boss) :
+        SPAWN = BossBullets.boss_size
+        for a in boss : 
+            x_pos = a['rect'].x 
+            print(x_pos)
+        x_spawn = [x_pos, x_pos + SPAWN / 8, x_pos + SPAWN/4, x_pos + SPAWN / 1.25, x_pos + SPAWN / 1.125, x_pos + SPAWN]
+        for a in x_spawn : 
             Bullet_size = BossBullets.bullet_size
             Bullet_speed = BossBullets.bullet_speed
             newBullet = {'rect': pygame.Rect(a, BossBullets.y_spawn, Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(EnemyBulletImage, (Bullet_size, Bullet_size)),}
@@ -427,22 +470,24 @@ class BossBombs :
     bomb_size = 50
     bomb_speed = 2
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
-    y_pos = image_height/2 + 70
-    x_pos = (WINDOWWIDTH - image_width)/2
-    x_spawn = [x_pos + 250, WINDOWWIDTH - x_pos - 250 ]
-    y_spawn = y_pos
+    y_pos = BossShip.y_final_pos
+    x_pos = BossShip.x_pos
+    y_spawn = y_pos + BossShip.new_height/1.2
     bomb_width, bomb_height = MissileImage.get_size()
 
 
-    def BossShootsBombs(a_list, facing) : 
-        for a in BossBombs.x_spawn : 
+    def BossShootsBombs(a_list, boss, facing) : 
+        for a in boss : 
+            x_pos = a['rect'].x
+        x_spawn = [x_pos + BossShip.new_width*0.25, x_pos + BossShip.new_width*0.75]
+        for a in x_spawn : 
             Bomb_width = BossBombs.bomb_width/10
             Bomb_height = BossBombs.bomb_height/10
             Bomb_speed = BossBombs.bomb_speed
             if facing == 1 : 
-                X_spawn = BossBombs.x_spawn[0] 
+                X_spawn = x_spawn[0] 
             elif facing == 2 : 
-                X_spawn = BossBombs.x_spawn[1]
+                X_spawn = x_spawn[1]
             newBomb = {'rect': pygame.Rect(X_spawn, BossBombs.y_spawn, Bomb_width, Bomb_height), 'speed': Bomb_speed, 'surface':pygame.transform.scale(MissileImage, (Bomb_width, Bomb_height)),}
             a_list.append(newBomb)
         return a_list
