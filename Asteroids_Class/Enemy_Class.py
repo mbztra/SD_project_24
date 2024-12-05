@@ -20,8 +20,6 @@ FalconImage = pygame.image.load('falcon.png')
 MissileImage = pygame.image.load('missile.png')
 HelperImage = pygame.image.load('helper.png')
 facing = "left"
-boomsound = pygame.mixer.Sound('Boom.mp3')
-
 # The structure of each ennemy is the same ish. We have methods to create, move, 
 # destroy if it touches the bottom, and check if it got shot. 
 # However, they all have specificities that I'll be commenting on. 
@@ -377,8 +375,6 @@ class Bullets :
                         LEVEL = 5
                         boss_dead = True
                         score += 3000
-                        boomsound.play()
-                        boomsound.stop()
         return bullets, boss, score, LEVEL, boss_dead
     
     def BulletHasHitBomb(bullets, boss_missiles,):

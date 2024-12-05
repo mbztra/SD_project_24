@@ -25,6 +25,7 @@ LVL = 0
 boss_facing = "left"
 difficulty = 0 
 boss_dead = False 
+sound_played = False 
 
 # Defining a few important functions 
 def terminate():
@@ -99,9 +100,9 @@ font = pygame.font.Font(font_path, 30)  # Load the custom font with a size of 48
 font_title = pygame.font.Font(font_path, 50)
 
 # Set up sounds.
+pygame.mixer.init()
 gameOverSound = pygame.mixer.Sound('laser.wav')
 pygame.mixer.music.load('Asteroids_Music_final.wav')
-
 
 # Set up images.
 playerImage = pygame.image.load('Main_character_resized.png')
@@ -141,6 +142,7 @@ while True :
     helpers = []
     boss_bullets = []
     boss_missiles = []
+    
 
     #Set up Score and Player 
     score = 0
@@ -564,7 +566,6 @@ while True :
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
 
         
-
 
         mainClock.tick(FPS)
 
