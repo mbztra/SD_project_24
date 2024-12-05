@@ -130,6 +130,7 @@ while True :
     # Set up the start of the game.
 
     # Set up the lists of all ennemies 
+    boss_dead = False 
     asteroids = []
     spacedrones = []
     fighters = []
@@ -426,7 +427,7 @@ while True :
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
 
-        # Draw each ennemy, according to the level.<
+        # Draw each ennemy, according to the level.
         if LEVEL == 0 : 
             draw_box_with_text(windowSurface, "Choose difficulty : Easy (1), Medium (2), Hard (3)", 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
         elif LEVEL == "To level 2" : 
