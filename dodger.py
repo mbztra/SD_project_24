@@ -514,14 +514,14 @@ while True:
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
             if len(falcons) >= 1 : 
                 bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
-        elif LEVEL == 2 :                
+        elif LEVEL == 2 :               
             bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
-        elif LEVEL == 3 : 
+        elif LEVEL == 3 :
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
         elif LEVEL == 4 : 
             bullets, boss, score, LEVEL = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL)
             bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
-        elif LEVEL == 6 : 
+        elif LEVEL == 6 :
             bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score)
             bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score)
             bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score)
