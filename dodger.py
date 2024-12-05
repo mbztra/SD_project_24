@@ -15,7 +15,7 @@ add_new_falcon_rate = 1
 add_new_boss_rate = 1 
 helpers_rate = 2
 limitless_rate = 3
-LEVEL = 1
+LEVEL = 0
 facing = 1 
 timer = 0 
 helper_timer = 0 
@@ -25,6 +25,20 @@ call_for_help = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 pause = False
 LVL = 0  
+difficulty = 1 
+
+if difficulty == 1 : 
+    add_new_asteroid_rate = 5
+    add_new_spacedrone_rate = 3
+    add_new_fighter_rate = 5 
+elif difficulty == 2 : 
+    add_new_asteroid_rate = 7
+    add_new_spacedrone_rate = 5
+    add_new_fighter_rate = 7 
+elif difficulty == 3 : 
+    add_new_asteroid_rate = 10
+    add_new_spacedrone_rate = 7
+    add_new_fighter_rate = 10
 
 # Defining a few important functions 
 def terminate():
@@ -151,6 +165,8 @@ while True:
     volume = 1
     pygame.mixer.music.set_volume(volume)
 
+    #set up difficulty 
+
     while True: # The game loop runs while the game part is playing.
         if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 and not LEVEL == "PAUSE":
             score += 1  # Increase score.
@@ -163,7 +179,7 @@ while True:
         if pause : 
             LEVEL = "PAUSE"
             LVL = LEVEL
-        elif score < 1500 : 
+        elif score < 1500 and not LEVEL == 0 : 
             LEVEL = 1
         elif score > 1500 and score < 1510 : 
             LEVEL = "To level 2"
@@ -230,6 +246,17 @@ while True:
                         LEVEL = LVL
                     else : 
                         pause = True 
+                if event.key == K_1 : 
+                    if LEVEL == 0 : 
+                        difficulty = 1 
+                        LEVEL = 1 
+                if event.key == K_2 : 
+                    if LEVEL == 0 : 
+                        difficulty = 2
+                        LEVEL = 1  
+                if event.key == K_3 : 
+                        difficulty = 3
+                        LEVEL = 1  
 
             if event.type == KEYUP:
                 if event.key == K_ESCAPE:
@@ -392,8 +419,10 @@ while True:
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
 
-        # Draw each ennemy, according to the level.
-        if LEVEL == "To level 2" : 
+        # Draw each ennemy, according to the level.<
+        if LEVEL == 0 : 
+            draw_box_with_text(windowSurface, "Choose difficulty : Easy (1), Medium (2), Hard (3)", 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
+        elif LEVEL == "To level 2" : 
             draw_box_with_text(windowSurface, 
                                "LEVEL 2 (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
