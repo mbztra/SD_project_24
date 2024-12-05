@@ -154,7 +154,7 @@ while True:
     boss_missiles = []
 
     #Set up Score and Player 
-    score = 7510
+    score = 0
     playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
 
     #Set up the movement and music 
