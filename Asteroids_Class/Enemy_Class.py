@@ -351,7 +351,7 @@ class Bullets :
                     bullets.remove(b)
                     score += 200
                     if score > 7500 : 
-                        score = 4500
+                        score = 7500
         return bullets, fighters, score
     
     def BulletHasHitFalcon(bullets, fighters, score):

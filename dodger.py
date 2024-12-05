@@ -22,21 +22,8 @@ call_for_help = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 pause = False
 LVL = 0  
-difficulty = 1 
 boss_facing = "left"
-
-if difficulty == 1 : 
-    add_new_asteroid_rate = 5
-    add_new_spacedrone_rate = 3
-    add_new_fighter_rate = 5 
-elif difficulty == 2 : 
-    add_new_asteroid_rate = 7
-    add_new_spacedrone_rate = 5
-    add_new_fighter_rate = 7 
-elif difficulty == 3 : 
-    add_new_asteroid_rate = 10
-    add_new_spacedrone_rate = 7
-    add_new_fighter_rate = 10
+difficulty = 0 
 
 # Defining a few important functions 
 def terminate():
@@ -244,17 +231,16 @@ while True:
                         LEVEL = LVL
                     else : 
                         pause = True 
-                if event.key == K_1 : 
-                    if LEVEL == 0 : 
-                        difficulty = 1 
-                        LEVEL = 1 
-                if event.key == K_2 : 
-                    if LEVEL == 0 : 
-                        difficulty = 2
-                        LEVEL = 1  
-                if event.key == K_3 : 
-                        difficulty = 3
-                        LEVEL = 1  
+                if LEVEL == 0 : 
+                    if event.key == K_1:  
+                            difficulty = 1 
+                            LEVEL = 1 
+                    if event.key == K_2 :  
+                            difficulty = 2
+                            LEVEL = 1  
+                    if event.key == K_3 : 
+                            difficulty = 3
+                            LEVEL = 1  
 
             if event.type == KEYUP:
                 if event.key == K_ESCAPE:
@@ -276,6 +262,19 @@ while True:
                 # If the mouse moves, move the player where to the cursor.
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
+        
+        if difficulty == 1 : 
+            add_new_asteroid_rate = 5
+            add_new_spacedrone_rate = 3
+            add_new_fighter_rate = 5 
+        elif difficulty == 2 : 
+            add_new_asteroid_rate = 10
+            add_new_spacedrone_rate = 7
+            add_new_fighter_rate = 10
+        elif difficulty == 3 : 
+            add_new_asteroid_rate = 20
+            add_new_spacedrone_rate = 14
+            add_new_fighter_rate = 20
 
         # Add new enemies at the top of the screen, if needed.
         # It will check what level we are playing and will display the correct ennemies. 
