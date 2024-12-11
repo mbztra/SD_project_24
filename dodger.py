@@ -3,16 +3,16 @@ from pygame.locals import *
 from Asteroids_Class.Enemy_Class import *
 
 # Defining all the important variables for later 
-TEXTCOLOR = (255, 255, 255)
-BACKGROUNDCOLOR = (255, 255, 255)
+text_colour = (255, 255, 255)
+background_colour = (255, 255, 255)
 FPS = 60
-PLAYERMOVERATE = 5
+player_move_rate = 5
 add_new_bullet_rate = 5 
 add_new_falcon_rate = 1
 add_new_boss_rate = 1 
 helpers_rate = 2
 limitless_rate = 3
-LEVEL = 0
+level = 0
 facing = 1 
 timer = 0 
 helper_timer = 0 
@@ -21,7 +21,7 @@ limitless = False
 call_for_help = False
 AsteroidImage = pygame.image.load('Asteroids2.png')
 pause = False
-LVL = 0  
+lvl = 0  
 boss_facing = "left"
 difficulty = 0 
 boss_dead = False 
@@ -32,7 +32,7 @@ def terminate():
     pygame.quit()
     sys.exit()
 
-def waitForPlayerToPressKey():
+def wait_for_player_to_press_key():
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -42,14 +42,14 @@ def waitForPlayerToPressKey():
                     terminate()
                 return
 
-def drawText(text, font, surface, x, y):
-    textobj = font.render(text, 1, TEXTCOLOR)
+def draw_text(text, font, surface, x, y):
+    textobj = font.render(text, 1, text_colour)
     textrect = textobj.get_rect()
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
-def drawTitle(text, font, surface, x, y):
-    textobj1 = font.render(text, 1, TEXTCOLOR)
+def draw_title(text, font, surface, x, y):
+    textobj1 = font.render(text, 1, text_colour)
     textrect1 = textobj1.get_rect()
     textrect1.center = (x, y)
     surface.blit(textobj1, textrect1)
@@ -87,8 +87,8 @@ mainClock = pygame.time.Clock()
 
 # Checks the size of the screen displaying the game to adapt.
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = screen_info.current_w, screen_info.current_h
-windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+window_width, window_height = screen_info.current_w, screen_info.current_h
+window_surface = pygame.display.set_mode((window_width, window_height))
 
 #Defines the name of the window 
 pygame.display.set_caption('Galaxy Guardian')
@@ -108,23 +108,23 @@ pygame.mixer.music.load('Asteroids_Music_final.wav')
 playerImage = pygame.image.load('Main_character_resized.png')
 playerRect = playerImage.get_rect()
 backgroundImage = pygame.image.load('space.jpg')  # Replace 'background.jpg' with your image file
-backgroundImage = pygame.transform.scale(backgroundImage, (WINDOWWIDTH, WINDOWHEIGHT))
+backgroundImage = pygame.transform.scale(backgroundImage, (window_width, window_height))
 logoImage = pygame.image.load("Logo2.png")
 image_width, image_height = logoImage.get_size() # Calculate the position to center the image 
-x_pos = (WINDOWWIDTH - image_width) / 2 
-y_pos = (WINDOWHEIGHT - image_height) / 2 - 100
+x_pos = (window_width - image_width) / 2 
+y_pos = (window_height - image_height) / 2 - 100
 Boss_image = pygame.image.load('Boss-ship.png')
 Boss_width, Boss_height = Boss_image.get_size()
 y_final_pos = -Boss_width/25 + 50
 
 
 # Show the "Start" screen.
-windowSurface.blit(backgroundImage, (0, 0))  # Draw the image at the top-left corner of the screen
-windowSurface.blit(logoImage, (x_pos, y_pos ))
-drawTitle('Galaxy Guardian', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
-drawTitle('Press a key to start.', font, windowSurface, (WINDOWWIDTH // 2), (WINDOWHEIGHT // 2) + 50)
+window_surface.blit(backgroundImage, (0, 0))  # Draw the image at the top-left corner of the screen
+window_surface.blit(logoImage, (x_pos, y_pos ))
+draw_title('Galaxy Guardian', font_title, window_surface, (window_width / 2), (window_height / 2))
+draw_title('Press a key to start.', font, window_surface, (window_width // 2), (window_height // 2) + 50)
 pygame.display.update()
-waitForPlayerToPressKey()
+wait_for_player_to_press_key()
 
 topScore = 0
 while True : 
@@ -146,7 +146,7 @@ while True :
 
     #Set up Score and Player 
     score = 0
-    playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
+    playerRect.topleft = (window_width / 2, window_height - 50)
 
     #Set up the movement and music 
     moveLeft = moveRight = moveUp = moveDown = False
@@ -157,7 +157,7 @@ while True :
     #set up difficulty 
 
     while True: # The game loop runs while the game part is playing.
-        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 and not LEVEL == "PAUSE" and not LEVEL == 0 : 
+        if not level == "To Boss" and not level == "To level 2" and not level == "To level 3" and not level == 5 and not level == "PAUSE" and not level == 0 : 
             score += 1  # Increase score.
         if not helper_timer == 0 : 
             helper_timer += 1 
@@ -166,27 +166,27 @@ while True :
 
         # The game defines on what level we are playing. 
         if pause : 
-            LVL = LEVEL
-            LEVEL = "PAUSE"
-        elif score < 1500 and not LEVEL == 0 : 
-            LEVEL = 1
+            lvl = level
+            level = "PAUSE"
+        elif score < 1500 and not level == 0 : 
+            level = 1
         elif score > 1500 and score < 1510 : 
-            LEVEL = "To level 2"
+            level = "To level 2"
         elif score > 1510 and score < 4500 : 
-           LEVEL = 2
+           level = 2
            asteroids = []
         elif score > 4500 and score < 4510 : 
-            LEVEL = "To level 3"
+            level = "To level 3"
         elif score > 4510 and score < 7500 : 
-            LEVEL = 3
+            level = 3
             spacedrones = []
         elif score > 7500 and score < 7510 : 
-            LEVEL = "To Boss"
-        elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 and not LEVEL == "PAUSE" : 
-            LEVEL = 4
+            level = "To Boss"
+        elif score > 7510 and not level == 5 and not level == 6 and not level == "PAUSE" : 
+            level = 4
             fighters = []
-        elif score > 7510 and boss_dead and not LEVEL == 5 : 
-            LEVEL = 6 
+        elif score > 7510 and boss_dead and not level == 5 : 
+            level = 6 
 
         # We now check for every action possible 
 
@@ -196,38 +196,38 @@ while True :
 
             if event.type == KEYDOWN:
                 if event.key == K_LEFT or event.key == K_a :
-                    if not LEVEL == "PAUSE" : 
+                    if not level == "PAUSE" : 
                         moveRight = False
                         moveLeft = True
                 if event.key == K_RIGHT or event.key == K_d:
-                    if not LEVEL == "PAUSE" :
+                    if not level == "PAUSE" :
                         moveLeft = False
                         moveRight = True
                 if event.key == K_UP or event.key == K_w:
-                    if not LEVEL == "PAUSE" :
+                    if not level == "PAUSE" :
                         moveDown = False
                         moveUp = True
                 if event.key == K_DOWN or event.key == K_s:
-                    if not LEVEL == "PAUSE" :
+                    if not level == "PAUSE" :
                         moveUp = False
                         moveDown = True
-                if event.key == K_SPACE and not LEVEL == "PAUSE" : 
+                if event.key == K_SPACE and not level == "PAUSE" : 
                     # Create a timer to able the player to keep shooting
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
                 if event.key == K_RETURN : 
-                    if LEVEL == "To level 2" : 
-                        LEVEL = 2 
+                    if level == "To level 2" : 
+                        level = 2 
                         score = 1510
-                    elif LEVEL == "To level 3" : 
-                        LEVEL = 3 
+                    elif level == "To level 3" : 
+                        level = 3 
                         score = 4510
-                    elif LEVEL == "To Boss" : 
-                        LEVEL = 4
+                    elif level == "To Boss" : 
+                        level = 4
                         score = 7510
                     if limitless : 
-                        LEVEL = 6
+                        level = 6
                         asteroids = []
                         spacedrones = []
                         fighters = []
@@ -235,22 +235,22 @@ while True :
                 if event.key == K_h : 
                     call_for_help = True 
                 if event.key == K_LCTRL : 
-                    if not LEVEL == 4 : 
+                    if not level == 4 : 
                         if pause == True : 
                             pause = False
-                            LEVEL = LVL
+                            level = lvl
                         else : 
                             pause = True 
-                if LEVEL == 0 : 
+                if level == 0 : 
                     if event.key == K_1:  
                             difficulty = 1 
-                            LEVEL = 1 
+                            level = 1 
                     if event.key == K_2 :  
                             difficulty = 2
-                            LEVEL = 1  
+                            level = 1  
                     if event.key == K_3 : 
                             difficulty = 3
-                            LEVEL = 1  
+                            level = 1  
 
             if event.type == KEYUP:
                 if event.key == K_ESCAPE:
@@ -270,7 +270,7 @@ while True :
 
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where to the cursor.
-                if not LEVEL == "PAUSE" : 
+                if not level == "PAUSE" : 
                     playerRect.centerx = event.pos[0]
                     playerRect.centery = event.pos[1]
         
@@ -289,20 +289,20 @@ while True :
 
         # Add new enemies at the top of the screen, if needed.
         # It will check what level we are playing and will display the correct ennemies. 
-        if LEVEL == 1 : 
+        if level == 1 : 
             if len(asteroids) <= add_new_asteroid_rate :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
             if falcon_test == 9 and len(falcons) < add_new_falcon_rate : 
                 falcons = millenium_falcon.CreateNewFalcon(falcons)
-        elif LEVEL == 2 : 
+        elif level == 2 : 
             if len(spacedrones) <= add_new_spacedrone_rate : 
                 spacedrones = Space_Drones.CreateNewSpaceDrones(spacedrones)
-        elif LEVEL == 3 : 
+        elif level == 3 : 
             if len(fighters) <= add_new_fighter_rate : 
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
             if score % 60  == 0 : 
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
-        elif LEVEL == 4 : 
+        elif level == 4 : 
             if len(boss) < add_new_boss_rate : 
                 boss = BossShip.CreateNewBoss(boss)
             if score % 30 == 0 : 
@@ -318,7 +318,7 @@ while True :
                     helpers = Helpers.CallForHelpers(helpers, boss, 0)
                     helpers = Helpers.CallForHelpers(helpers, boss, 1)
                     helper_timer = 1 
-        elif LEVEL == 6 : #Level 6 is a limitless level, just to increase the score after the boss,
+        elif level == 6 : #Level 6 is a limitless level, just to increase the score after the boss,
                           #and uses all types of ennemeies (appart from the boss)
             if len(asteroids) <= 5 :
                 asteroids = Asteroids.CreateNewAsteroids(asteroids)
@@ -347,26 +347,26 @@ while True :
         
         # Move the player around.
         if moveLeft and playerRect.left > 0:
-            playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
-        if moveRight and playerRect.right < WINDOWWIDTH:
-            playerRect.move_ip(PLAYERMOVERATE, 0)
+            playerRect.move_ip(-1 * player_move_rate, 0)
+        if moveRight and playerRect.right < window_width:
+            playerRect.move_ip(player_move_rate, 0)
         if moveUp and playerRect.top > 0:
-            playerRect.move_ip(0, -1 * PLAYERMOVERATE)
-        if moveDown and playerRect.bottom < WINDOWHEIGHT:
-            playerRect.move_ip(0, PLAYERMOVERATE)
+            playerRect.move_ip(0, -1 * player_move_rate)
+        if moveDown and playerRect.bottom < window_height:
+            playerRect.move_ip(0, player_move_rate)
 
         # Move the enemies down.
         # It checks what enemies to move according to the level. 
-        if LEVEL == 1 : 
+        if level == 1 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
             if len(falcons) >= 1 : 
                 falcons = millenium_falcon.MoveFalcon(falcons)
-        elif LEVEL == 2 : 
+        elif level == 2 : 
             spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
-        elif LEVEL == 3 : 
+        elif level == 3 : 
             fighters = Alien_Fighters.MoveFighter(fighters)
             enemy_bullets = EnemyBullets.MoveEnemyBullet(mean_bullets)
-        elif LEVEL == 4 : 
+        elif level == 4 : 
             boss_facing = BossShip.CheckFacing(boss, boss_facing)
             for a in boss : 
                 if a['rect'].y < y_final_pos :  
@@ -380,9 +380,9 @@ while True :
             boss_bullets = BossBullets.MoveBossBullet(boss_bullets)
             boss_missiles = BossBombs.MoveBombsToPlayer(playerRect, boss_missiles)
             for a in helpers : 
-                if a['rect'].y > WINDOWHEIGHT/2 + 100 : 
+                if a['rect'].y > window_height/2 + 100 : 
                     helpers = Helpers.MoveHelpers(helpers)
-        elif LEVEL == 6 : 
+        elif level == 6 : 
             asteroids = Asteroids.MoveAsteroids(asteroids)
             spacedrones = Space_Drones.MoveSpaceDronesToPlayer(playerRect, spacedrones)
             fighters = Alien_Fighters.MoveFighter(fighters)
@@ -393,16 +393,16 @@ while True :
 
         # Delete ennemies that have fallen past the bottom.
         # Once again, checks the level.
-        if LEVEL == 1 : 
+        if level == 1 : 
             asteroids = Asteroids.DeleteAsteroids(asteroids)
             if len(falcons) >= 1 : 
                 falcons = millenium_falcon.DeleteFalcon(falcons)
-        elif LEVEL == 2 : 
+        elif level == 2 : 
             spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
-        elif LEVEL == 3 : 
+        elif level == 3 : 
             fighters = Alien_Fighters.DeleteFighter(fighters)
             mean_bullets  = EnemyBullets.DeleteEnemyBullet(mean_bullets)
-        elif LEVEL == 4 : 
+        elif level == 4 : 
             boss = BossShip.DeleteBoss(boss)
             boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
             boss_missiles = BossBombs.DeleteBombs(boss_missiles)
@@ -412,7 +412,7 @@ while True :
                 helper_check = 1 
                 call_for_help = False
 
-        elif LEVEL == 6 :
+        elif level == 6 :
             asteroids = Asteroids.DeleteAsteroids(asteroids) 
             spacedrones = Space_Drones.DeleteSpaceDrones(spacedrones)
             fighters = Alien_Fighters.DeleteFighter(fighters)
@@ -423,81 +423,81 @@ while True :
         bullets = Bullets.DeleteBullet(bullets)
 
         # Draw the game world on the window.
-        windowSurface.fill(BACKGROUNDCOLOR)
+        window_surface.fill(background_colour)
 
         # Draw the score and top score.
-        windowSurface.blit(backgroundImage, (0, 0))  # Draw the background image
-        drawText('Score: %s' % (score), font, windowSurface, 10, 0)
-        drawText('Top Score: %s' % (topScore), font, windowSurface, 10, 40)
-        drawText('Level: %s' % (LEVEL), font, windowSurface, 10, 80) 
+        window_surface.blit(backgroundImage, (0, 0))  # Draw the background image
+        draw_text('Score: %s' % (score), font, window_surface, 10, 0)
+        draw_text('Top Score: %s' % (topScore), font, window_surface, 10, 40)
+        draw_text('Level: %s' % (level), font, window_surface, 10, 80) 
 
         # Draw the player's rectangle.
-        windowSurface.blit(playerImage, playerRect)
+        window_surface.blit(playerImage, playerRect)
 
         # Draw each ennemy, according to the level.
-        if LEVEL == 0 : 
-            draw_box_with_text(windowSurface, "Choose difficulty : Easy (1), Medium (2), Hard (3)", 0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == "To level 2" : 
-            draw_box_with_text(windowSurface, 
+        if level == 0 : 
+            draw_box_with_text(window_surface, "Choose difficulty : Easy (1), Medium (2), Hard (3)", 0, window_height/3, window_width, window_height/3, font_title)
+        elif level == "To level 2" : 
+            draw_box_with_text(window_surface, 
                                "LEVEL 2 (RETURN)", 
-                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == "To level 3" : 
-            draw_box_with_text(windowSurface, 
+                               0, window_height/2 - window_height/4, window_width, window_height/3, font_title)
+        elif level == "To level 3" : 
+            draw_box_with_text(window_surface, 
                                "LEVEL 3 (RETURN)", 
-                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == "To Boss" : 
-            draw_box_with_text(windowSurface, 
+                               0, window_height/2 - window_height/4, window_width, window_height/3, font_title)
+        elif level == "To Boss" : 
+            draw_box_with_text(window_surface, 
                                "BOSS LEVEL (RETURN)", 
-                               0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == 1 :
+                               0, window_height/2 - window_height/4, window_width, window_height/3, font_title)
+        elif level == 1 :
             for a in asteroids : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             if len(falcons) >= 1 : 
                 for a in falcons : 
-                    windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 2 :
+                    window_surface.blit(a['surface'], a['rect'])
+        elif level == 2 :
             for a in spacedrones : 
-                windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 3 : 
+                window_surface.blit(a['surface'], a['rect'])
+        elif level == 3 : 
             for a in fighters :
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in mean_bullets : 
-                windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 4 :
+                window_surface.blit(a['surface'], a['rect'])
+        elif level == 4 :
             for a in boss : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in boss_bullets : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in boss_missiles : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in helpers : 
-                windowSurface.blit(a['surface'], a['rect'])
-            BossShip.DrawBossBar(windowSurface, boss, WINDOWWIDTH/2, 0)
-            drawTitle("Alien Boss", font, windowSurface, WINDOWWIDTH/2, 20)
-            drawText('Helpers Used : %s /1' % (helper_check), font, windowSurface, 10, 120)
-        elif LEVEL == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
-            draw_box_with_text(windowSurface, 
+                window_surface.blit(a['surface'], a['rect'])
+            BossShip.DrawBossBar(window_surface, boss, window_width/2, 0)
+            draw_title("Alien Boss", font, window_surface, window_width/2, 20)
+            draw_text('Helpers Used : %s /1' % (helper_check), font, window_surface, 10, 120)
+        elif level == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
+            draw_box_with_text(window_surface, 
                 "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
-                0, WINDOWHEIGHT/3, WINDOWWIDTH, WINDOWHEIGHT/3,font_title)
+                0, window_height/3, window_width, window_height/3,font_title)
             limitless = True 
-        elif LEVEL == 6 or LEVEL == "PAUSE": 
+        elif level == 6 or level == "PAUSE": 
             for a in asteroids : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in spacedrones : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in fighters :
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             for a in mean_bullets : 
-                windowSurface.blit(a['surface'], a['rect'])
+                window_surface.blit(a['surface'], a['rect'])
             
         # Drawing the Bullets 
         for a in bullets : 
-            windowSurface.blit(a['surface'], a['rect'])
+            window_surface.blit(a['surface'], a['rect'])
 
         pygame.display.update()
 
         # Check if any of the ennemies have hit the player.
-        if LEVEL == 1 : 
+        if level == 1 : 
             if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
                 if score > topScore : 
                     topScore = score 
@@ -507,12 +507,12 @@ while True :
                     if score > topScore : 
                         topScore = score 
                     break
-        elif LEVEL == 2 : 
+        elif level == 2 : 
             if Space_Drones.playerHasHitSpaceDrone(playerRect, spacedrones) : 
                 if score > topScore : 
                     topScore = score 
                 break 
-        elif LEVEL == 3 : 
+        elif level == 3 : 
             if Alien_Fighters.playerHasHitFighter(playerRect, fighters) : 
                 if score > topScore : 
                     topScore = score 
@@ -521,7 +521,7 @@ while True :
                 if score > topScore : 
                     topScore = score 
                 break
-        elif LEVEL == 4 :
+        elif level == 4 :
             if BossShip.playerHasHitBoss(playerRect, boss) : 
                 if score > topScore : 
                     topScore = score 
@@ -534,7 +534,7 @@ while True :
                 if score > topScore : 
                     topScore = score 
                 break      
-        elif LEVEL == 6 : 
+        elif level == 6 : 
             if Asteroids.playerHasHitAsteroids(playerRect, asteroids) : 
                 if score > topScore : 
                     topScore = score 
@@ -554,21 +554,21 @@ while True :
 
         #Check if any bullets have hit the enemies.
         #Checking what ennemies to look in relation with the level 
-        if LEVEL == 1 : 
-            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, LEVEL)
+        if level == 1 : 
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, level)
             if len(falcons) >= 1 : 
                 bullets, falcons, score = Bullets.BulletHasHitFalcon(bullets, falcons, score)
-        elif LEVEL == 2 :               
-            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, LEVEL)
-        elif LEVEL == 3 :
-            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
-        elif LEVEL == 4 :  
-            bullets, boss, score, LEVEL, boss_dead = Bullets.BulletHasHitBoss(bullets, boss, score, LEVEL, boss_dead)
+        elif level == 2 :               
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, level)
+        elif level == 3 :
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, level)
+        elif level == 4 :  
+            bullets, boss, score, level, boss_dead = Bullets.BulletHasHitBoss(bullets, boss, score, level, boss_dead)
             bullets, boss_missiles = Bullets.BulletHasHitBomb(bullets, boss_missiles)
-        elif LEVEL == 6 :
-            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, LEVEL)
-            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, LEVEL)
-            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, LEVEL)
+        elif level == 6 :
+            bullets, asteroids, score = Bullets.BulletHasHitAsteroids(bullets, asteroids, score, level)
+            bullets, spacedrones, score = Bullets.BulletHasHitDrones(bullets, spacedrones, score, level)
+            bullets, fighters, score = Bullets.BulletHasHitFighter(bullets, fighters, score, level)
 
         
 
@@ -580,9 +580,9 @@ while True :
     pygame.mixer.music.set_volume(volume)
     gameOverSound.play()
 
-    drawTitle('GAME OVER', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2))
-    drawTitle('Press a key to play again.', font_title, windowSurface, (WINDOWWIDTH / 2), (WINDOWHEIGHT / 2) + 50)
+    draw_title('GAME OVER', font_title, window_surface, (window_width / 2), (window_height / 2))
+    draw_title('Press a key to play again.', font_title, window_surface, (window_width / 2), (window_height / 2) + 50)
     pygame.display.update()
-    waitForPlayerToPressKey()
+    wait_for_player_to_press_key()
 
     gameOverSound.stop()

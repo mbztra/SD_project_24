@@ -4,7 +4,7 @@ from pygame.locals import *
 #Checking the screen size to adapt the spawning of the different ennemies 
 pygame.init()
 screen_info = pygame.display.Info() 
-WINDOWWIDTH, WINDOWHEIGHT = int(screen_info.current_w), int(screen_info.current_h)
+window_width, window_height = int(screen_info.current_w), int(screen_info.current_h)
 
 # Loading all od the images 
 AsteroidImage = pygame.image.load('Asteroids2.png')
@@ -32,17 +32,17 @@ class Asteroids :
 
     def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
-        newAsteroid = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)), 'behaviour' : random.randint(1,5)}
+        newAsteroid = {'rect': pygame.Rect(random.randint(0, window_width - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)), 'behaviour' : random.randint(1,5)}
         
         # This makes so that the asteroids can go diagonal, and that their image will switch directions accordingly
         if newAsteroid['behaviour'] == 5 : 
-            if newAsteroid['rect'].x > WINDOWWIDTH/2 : 
+            if newAsteroid['rect'].x > window_width/2 : 
                 newAsteroid['facing'] = "left"
                 newAsteroid['surface'] = pygame.transform.scale(AsteroidImageLeft, (asteroids_size, asteroids_size))
-            elif newAsteroid['rect'].x < WINDOWWIDTH/2 : 
+            elif newAsteroid['rect'].x < window_width/2 : 
                 newAsteroid['facing'] = "right"
                 newAsteroid['surface'] = pygame.transform.scale(AsteroidImageRight, (asteroids_size, asteroids_size))
-            elif newAsteroid['rect'] == WINDOWWIDTH/2 : 
+            elif newAsteroid['rect'] == window_width/2 : 
                 pass
         a_list.append(newAsteroid)
         return a_list
@@ -59,7 +59,7 @@ class Asteroids :
     
     def DeleteAsteroids(asteroids_list2) :
         for a in asteroids_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 asteroids_list2.remove(a)
         return asteroids_list2
     
@@ -80,7 +80,7 @@ class millenium_falcon :
     def CreateNewFalcon(a_list) : 
         Falcon_size = millenium_falcon.falcon_size
         Falcon_speed = millenium_falcon.falcon_speed
-        newFalcon = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, 2.2 * Falcon_size)),}
+        newFalcon = {'rect': pygame.Rect(random.randint(0, window_width - Falcon_size), 0 - Falcon_size, Falcon_size, Falcon_size), 'speed': Falcon_speed, 'surface':pygame.transform.scale(FalconImage, (Falcon_size, 2.2 * Falcon_size)),}
         a_list.append(newFalcon)
         return a_list
 
@@ -91,7 +91,7 @@ class millenium_falcon :
     
     def DeleteFalcon(asteroids_list2) :
         for a in asteroids_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 asteroids_list2.remove(a)
         return asteroids_list2
 
@@ -111,7 +111,7 @@ class Space_Drones :
 
     def CreateNewSpaceDrones(a_list) : 
         SpaceDrones_size = random.randint(Space_Drones.space_drones_min_size, Space_Drones.space_drones_max_size)
-        newSpaceDrone = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'horizontal_speed' : random.randint(Space_Drones.space_drones_min_hor_speed, Space_Drones.space_drones_max_hor_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
+        newSpaceDrone = {'rect': pygame.Rect(random.randint(0, window_width - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'horizontal_speed' : random.randint(Space_Drones.space_drones_min_hor_speed, Space_Drones.space_drones_max_hor_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
         a_list.append(newSpaceDrone)
         return a_list
     
@@ -128,7 +128,7 @@ class Space_Drones :
 
     def DeleteSpaceDrones(spacedrones_list2) :
         for a in spacedrones_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 spacedrones_list2.remove(a)
         return spacedrones_list2
     
@@ -147,12 +147,12 @@ class Alien_Fighters :
 
     def CreateNewFighter(a_list) : 
         Fighter_size = random.randint(Alien_Fighters.fighters_min_size, Alien_Fighters.fighters_max_size)
-        newFighter = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - Fighter_size), 0 - Fighter_size, Fighter_size, Fighter_size), 'speed': random.randint(Alien_Fighters.fighters_min_speed, Alien_Fighters.fighters_max_speed), 'surface':pygame.transform.scale(AlienFighterImage, (Fighter_size, Fighter_size)),}
-        if newFighter['rect'].x > WINDOWWIDTH/2 : 
+        newFighter = {'rect': pygame.Rect(random.randint(0, window_width - Fighter_size), 0 - Fighter_size, Fighter_size, Fighter_size), 'speed': random.randint(Alien_Fighters.fighters_min_speed, Alien_Fighters.fighters_max_speed), 'surface':pygame.transform.scale(AlienFighterImage, (Fighter_size, Fighter_size)),}
+        if newFighter['rect'].x > window_width/2 : 
                 newFighter['facing'] = "left"
-        elif newFighter['rect'].x < WINDOWWIDTH/2 : 
+        elif newFighter['rect'].x < window_width/2 : 
                 newFighter['facing'] = "right"
-        elif newFighter['rect'] == WINDOWWIDTH/2 : 
+        elif newFighter['rect'] == window_width/2 : 
                 newFighter['facing'] = "right"
         a_list.append(newFighter)
         return a_list
@@ -169,7 +169,7 @@ class Alien_Fighters :
     
     def DeleteFighter(fighters_list2) :
         for a in fighters_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 fighters_list2.remove(a)
         return fighters_list2
     
@@ -187,9 +187,9 @@ class BossShip() :
     boss_ship_speed = 10
     image_width, image_height = BossShipImage.get_size() # Calculate the position to center the image 
     boss_ratio = image_width/image_height
-    new_height = WINDOWHEIGHT/2.5
+    new_height = window_height/2.5
     new_width = new_height*boss_ratio
-    x_pos = (WINDOWWIDTH - new_width)/2
+    x_pos = (window_width - new_width)/2
     y_pos = -new_height
     y_final_pos = -new_height/18
     boss_health = 200
@@ -204,7 +204,7 @@ class BossShip() :
         newBoss = {'rect': pygame.Rect(x_posi, y_posi, Ship_size_x, Ship_size_y), 'speed': Ship_Speed, 'surface':pygame.transform.scale(BossShipImage, (Ship_size_x, Ship_size_y)), 'life' : boss_life,}
         a_list.append(newBoss)
         print(BossShip.image_width)
-        print(WINDOWWIDTH)
+        print(window_width)
         return a_list
     
     def MoveBoss (a_list2) :
@@ -226,13 +226,13 @@ class BossShip() :
         for a in list : 
             if a['rect'].x < 0 : 
                 facing = "right"
-            if a['rect'].x + BossShip.new_width > WINDOWWIDTH : 
+            if a['rect'].x + BossShip.new_width > window_width : 
                 facing = "left"
         return facing 
     
     def DeleteBoss(list_2) :
         for a in list_2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 list_2.remove(a)
         return list_2
     
@@ -254,7 +254,7 @@ class BossShip() :
 class Helpers() : 
     helpers_size = 50
     helpers_speed = -4 
-    x_spawn = [WINDOWWIDTH/2 - 100, WINDOWWIDTH/2 + 100]
+    x_spawn = [window_width/2 - 100, window_width/2 + 100]
 
     def CallForHelpers(a_list, boss, facing) : 
         for a in boss : 
@@ -263,7 +263,7 @@ class Helpers() :
         Size = Helpers.helpers_size
         Speed = Helpers.helpers_speed 
         x_pos = x_spawn[facing]
-        newHelper =  {'rect': pygame.Rect(x_pos, WINDOWHEIGHT, Size, Size), 'speed': Speed, 'surface':pygame.transform.scale(HelperImage, (Size, Size))}
+        newHelper =  {'rect': pygame.Rect(x_pos, window_height, Size, Size), 'speed': Speed, 'surface':pygame.transform.scale(HelperImage, (Size, Size))}
         a_list.append(newHelper)
         return a_list 
     
@@ -510,7 +510,7 @@ class BossBombs :
     
     def DeleteBombs(bombs_list2) :
         for a in bombs_list2[:] :
-            if a['rect'].top > WINDOWHEIGHT:
+            if a['rect'].top > window_height:
                 bombs_list2.remove(a)
         return bombs_list2
     
