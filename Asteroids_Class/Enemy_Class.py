@@ -323,8 +323,9 @@ class Bullets :
         for a in asteroids :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    asteroids.remove(a)
-                    bullets.remove(b)
+                    if not a == {} : 
+                        asteroids.remove(a)
+                        bullets.remove(b)
                     score += 50
                     if score > 1500 and LEVEL == 1 : 
                         score = 1501
@@ -346,8 +347,9 @@ class Bullets :
         for a in fighters :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    fighters.remove(a)
-                    bullets.remove(b)
+                    if not a == {} : 
+                        fighters.remove(a)
+                        bullets.remove(b)
                     score += 200
                     if score > 7500 and LEVEL == 3 : 
                         score = 7500
@@ -357,8 +359,9 @@ class Bullets :
         for a in fighters :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    fighters.remove(a)
-                    bullets.remove(b)
+                    if not a == {} : 
+                        fighters.remove(a)
+                        bullets.remove(b)
                     score = 5000
         return bullets, fighters, score
     
@@ -381,8 +384,9 @@ class Bullets :
         for a in boss_missiles :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    boss_missiles.remove(a)
-                    bullets.remove(b)
+                    if not a == {} : 
+                        boss_missiles.remove(a)
+                        bullets.remove(b)
         return bullets, boss_missiles
 
 # The bullets that the Level 3 Ennemies can shoot. They behave the same way as a normal ennemy,

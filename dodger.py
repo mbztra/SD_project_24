@@ -174,14 +174,17 @@ while True :
             LEVEL = "To level 2"
         elif score > 1510 and score < 4500 : 
            LEVEL = 2
+           asteroids = []
         elif score > 4500 and score < 4510 : 
             LEVEL = "To level 3"
         elif score > 4510 and score < 7500 : 
             LEVEL = 3
+            spacedrones = []
         elif score > 7500 and score < 7510 : 
             LEVEL = "To Boss"
         elif score > 7510 and not LEVEL == 5 and not LEVEL == 6 and not LEVEL == "PAUSE" : 
             LEVEL = 4
+            fighters = []
         elif score > 7510 and boss_dead and not LEVEL == 5 : 
             LEVEL = 6 
 
@@ -444,21 +447,21 @@ while True :
             draw_box_with_text(windowSurface, 
                                "BOSS LEVEL (RETURN)", 
                                0, WINDOWHEIGHT/2 - WINDOWHEIGHT/4, WINDOWWIDTH, WINDOWHEIGHT/3, font_title)
-        elif LEVEL == 1 or LEVEL == "PAUSE": 
+        elif LEVEL == 1 :
             for a in asteroids : 
                 windowSurface.blit(a['surface'], a['rect'])
             if len(falcons) >= 1 : 
                 for a in falcons : 
                     windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 2 or LEVEL == "PAUSE": 
+        elif LEVEL == 2 :
             for a in spacedrones : 
                 windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 3 or LEVEL == "PAUSE": 
+        elif LEVEL == 3 : 
             for a in fighters :
                 windowSurface.blit(a['surface'], a['rect'])
             for a in mean_bullets : 
                 windowSurface.blit(a['surface'], a['rect'])
-        elif LEVEL == 4 or LEVEL == "PAUSE": 
+        elif LEVEL == 4 :
             for a in boss : 
                 windowSurface.blit(a['surface'], a['rect'])
             for a in boss_bullets : 
