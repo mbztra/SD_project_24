@@ -323,12 +323,12 @@ class Bullets :
         for a in asteroids :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    if not a == {} : 
+                    if a in asteroids :
                         asteroids.remove(a)
                         bullets.remove(b)
-                    score += 50
-                    if score > 1500 and LEVEL == 1 : 
-                        score = 1501
+                        score += 50
+                        if score > 1500 and LEVEL == 1 : 
+                            score = 1501
         return bullets, asteroids, score
     
 
@@ -336,33 +336,34 @@ class Bullets :
         for a in spacedrones :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    spacedrones.remove(a)
-                    bullets.remove(b)
-                    score += 100
-                    if score > 4500 and LEVEL == 2 : 
-                        score = 4500
+                    if a in spacedrones : 
+                        spacedrones.remove(a)
+                        bullets.remove(b)
+                        score += 100
+                        if score > 4500 and LEVEL == 2 : 
+                            score = 4500
         return bullets, spacedrones, score 
 
     def BulletHasHitFighter(bullets, fighters, score, LEVEL):
         for a in fighters :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    if not a == {} : 
+                    if a in fighters : 
                         fighters.remove(a)
                         bullets.remove(b)
-                    score += 200
-                    if score > 7500 and LEVEL == 3 : 
-                        score = 7500
+                        score += 200
+                        if score > 7500 and LEVEL == 3 : 
+                            score = 7500
         return bullets, fighters, score
     
     def BulletHasHitFalcon(bullets, fighters, score):
         for a in fighters :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    if not a == {} : 
+                    if a in fighters : 
                         fighters.remove(a)
                         bullets.remove(b)
-                    score = 5000
+                        score = 5000
         return bullets, fighters, score
     
     def BulletHasHitBoss(bullets, boss, score, LEVEL, boss_dead):
@@ -384,7 +385,7 @@ class Bullets :
         for a in boss_missiles :
             for b in bullets : 
                 if b['rect'].colliderect(a['rect']):
-                    if not a == {} : 
+                    if a in boss_missiles : 
                         boss_missiles.remove(a)
                         bullets.remove(b)
         return bullets, boss_missiles
