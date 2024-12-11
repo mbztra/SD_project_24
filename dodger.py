@@ -235,11 +235,12 @@ while True :
                 if event.key == K_h : 
                     call_for_help = True 
                 if event.key == K_LCTRL : 
-                    if pause == True : 
-                        pause = False
-                        LEVEL = LVL
-                    else : 
-                        pause = True 
+                    if not LEVEL == 4 : 
+                        if pause == True : 
+                            pause = False
+                            LEVEL = LVL
+                        else : 
+                            pause = True 
                 if LEVEL == 0 : 
                     if event.key == K_1:  
                             difficulty = 1 
