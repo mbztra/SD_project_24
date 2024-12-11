@@ -157,7 +157,7 @@ while True :
     #set up difficulty 
 
     while True: # The game loop runs while the game part is playing.
-        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 and not LEVEL == "PAUSE":
+        if not LEVEL == "To Boss" and not LEVEL == "To level 2" and not LEVEL == "To level 3" and not LEVEL == 5 and not LEVEL == "PAUSE" and not LEVEL == 0 : 
             score += 1  # Increase score.
         if not helper_timer == 0 : 
             helper_timer += 1 
