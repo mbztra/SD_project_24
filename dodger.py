@@ -211,7 +211,7 @@ while True :
                     if not LEVEL == "PAUSE" :
                         moveUp = False
                         moveDown = True
-                if event.key == K_SPACE : 
+                if event.key == K_SPACE and not LEVEL == "PAUSE" : 
                     # Create a timer to able the player to keep shooting
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
@@ -269,8 +269,9 @@ while True :
 
             if event.type == MOUSEMOTION:
                 # If the mouse moves, move the player where to the cursor.
-                playerRect.centerx = event.pos[0]
-                playerRect.centery = event.pos[1]
+                if not LEVEL == "PAUSE" : 
+                    playerRect.centerx = event.pos[0]
+                    playerRect.centery = event.pos[1]
         
         if difficulty == 1 : 
             add_new_asteroid_rate = 5
@@ -327,7 +328,7 @@ while True :
             if score % 60  == 0 : 
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
 
-        # Here comes the timer. It allows the player to keep shooting if they maintain the key pressed.
+        # Here comes the timer. It allows the player to keep shooting if they maintain the key pressed. 
         if timer < 15 and timer > 0 : 
             timer += 1 
         elif timer >= 15 : 
