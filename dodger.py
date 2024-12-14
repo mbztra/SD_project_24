@@ -131,13 +131,22 @@ while True :
     # Set up the start of the game.
 
     # Set up the lists of all ennemies 
+
     boss_dead = False 
+    
+    # Enemies of each level 
     asteroids = []
     spacedrones = []
     fighters = []
+    falcons = []
+
+    # The bullets (ours) and mean bullets (the ennemies)
     bullets = []
     mean_bullets = []
-    falcons = []
+    
+    # And everything regarding the boss. 
+    # It gets it's own bullets because they have specific spawn points rather than the other bullets used by the ennemies. 
+    # The bullets of the helpers are the same as we use, because we can just give their rect rather than ours. 
     boss = []
     helpers = []
     boss_bullets = []
@@ -157,6 +166,9 @@ while True :
     #set up difficulty 
 
     while True: # The game loop runs while the game part is playing.
+
+        # I will only increase the score while the game is playing. Like this, i can set up transition screens
+        # between each levels and a pause button. 
         if not level == "To Boss" and not level == "To level 2" and not level == "To level 3" and not level == 5 and not level == "PAUSE" and not level == 0 : 
             score += 1  # Increase score.
         if not helper_timer == 0 : 
@@ -166,6 +178,9 @@ while True :
 
         # The game defines on what level we are playing. 
         if pause : 
+            # lvl variable is used to remember on which level we're playing. It is technically only necessary for when 
+            # we are on the limitless level, that isn't defined by a score, but it is also a security to make sure 
+            # no bugs can happen and we get teleported to another level. 
             lvl = level
             level = "PAUSE"
         elif score < 1500 and not level == 0 : 
@@ -174,7 +189,8 @@ while True :
             level = "To level 2"
         elif score > 1510 and score < 4500 : 
            level = 2
-           asteroids = []
+           asteroids = [] #this is necessary because my pause level is made to display all ennemies, i therefore need to 
+                          #empty the list
         elif score > 4500 and score < 4510 : 
             level = "To level 3"
         elif score > 4510 and score < 7500 : 
@@ -195,6 +211,7 @@ while True :
                 terminate()
 
             if event.type == KEYDOWN:
+                # We first check for actions moving the player, making sure he can't move if the game is on pause. 
                 if event.key == K_LEFT or event.key == K_a :
                     if not level == "PAUSE" : 
                         moveRight = False
@@ -211,11 +228,15 @@ while True :
                     if not level == "PAUSE" :
                         moveUp = False
                         moveDown = True
+
+                #We now check if the player wants to shoot. 
                 if event.key == K_SPACE and not level == "PAUSE" : 
                     # Create a timer to able the player to keep shooting
                     timer = 1 
                     if len(bullets) <= add_new_bullet_rate : 
                         bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
+
+                #Here, we check if the player pressed a key to pass from a transition to the level. 
                 if event.key == K_RETURN : 
                     if level == "To level 2" : 
                         level = 2 
@@ -226,14 +247,21 @@ while True :
                     elif level == "To Boss" : 
                         level = 4
                         score = 7510
+                
+                    #I need to empty the remaining ennemies and bullets that may have stayed after the levels, so that when 
+                    #we load the limitless level, we have an emtpy screen 
                     if limitless : 
                         level = 6
                         asteroids = []
                         spacedrones = []
                         fighters = []
                         mean_bullets = []
+                
+                #Check if the helpers have been activated. 
                 if event.key == K_h : 
                     call_for_help = True 
+                
+                #We now check if the user wants to pause. We do not allow the player to pause the game during the boss level, because we felt like it would be better. 
                 if event.key == K_LCTRL : 
                     if not level == 4 : 
                         if pause == True : 
@@ -241,6 +269,8 @@ while True :
                             level = lvl
                         else : 
                             pause = True 
+                
+                #Level 0 is the choose difficulty screen. I set the difficulty value by checking what has been pressed. 
                 if level == 0 : 
                     if event.key == K_1:  
                             difficulty = 1 
@@ -274,6 +304,8 @@ while True :
                     playerRect.centerx = event.pos[0]
                     playerRect.centery = event.pos[1]
         
+        #Now we apply the difficulty chosen on the first screen. It changes how many ennemies spawn on each level. 
+        #The boss and the limitless level are unafected, by game design choice. 
         if difficulty == 1 : 
             add_new_asteroid_rate = 5
             add_new_spacedrone_rate = 3
@@ -300,7 +332,7 @@ while True :
         elif level == 3 : 
             if len(fighters) <= add_new_fighter_rate : 
                 fighters = Alien_Fighters.CreateNewFighter(fighters)
-            if score % 60  == 0 : 
+            if score % 60  == 0 : #This makes the ennemies shoot only once every second (game playing at 60 FPS, and score += 1 every frame)
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
         elif level == 4 : 
             if len(boss) < add_new_boss_rate : 
@@ -330,6 +362,8 @@ while True :
                 enemy_bullets = EnemyBullets.EnemiesShoot(fighters, mean_bullets)
 
         # Here comes the timer. It allows the player to keep shooting if they maintain the key pressed. 
+        # This first condition is needed because by pressing the button, the player shoots, and then if the key is maintained, 
+        # it shot a second bullet on the same frame (or on the frame after) which created some problems. 
         if timer < 15 and timer > 0 : 
             timer += 1 
         elif timer >= 15 : 
@@ -338,6 +372,8 @@ while True :
                 if len(bullets) <= add_new_bullet_rate : 
                     bullets = Bullets.CreateNewBullet(playerRect, bullets, False)
 
+        # Here we make the helpers shoot at the same rate as the player. 
+        # The timer is here to make it so that they don't shoot before they arrive at their final height.
         if call_for_help :
             if helper_timer > 45 : 
                 if score % 15 == 0 :
@@ -406,6 +442,8 @@ while True :
             boss = BossShip.DeleteBoss(boss)
             boss_bullets = BossBullets.DeleteBossBullet(boss_bullets)
             boss_missiles = BossBombs.DeleteBombs(boss_missiles)
+            # The helpers never die of getting to the bottom of the screen, so we use this fonction to kill them 
+            # when it's been long enough (here 10 seconds)
             if helper_timer > 600 : 
                 helpers = Helpers.DeleteHelpers(helpers)
                 helper_timer = 0 
@@ -434,7 +472,7 @@ while True :
         # Draw the player's rectangle.
         window_surface.blit(playerImage, playerRect)
 
-        # Draw each ennemy, according to the level.
+        # Here we draw every box that sits in transition phases. 
         if level == 0 : 
             draw_box_with_text(window_surface, "Choose difficulty : Easy (1), Medium (2), Hard (3)", 0, window_height/3, window_width, window_height/3, font_title)
         elif level == "To level 2" : 
@@ -449,6 +487,14 @@ while True :
             draw_box_with_text(window_surface, 
                                "BOSS LEVEL (RETURN)", 
                                0, window_height/2 - window_height/4, window_width, window_height/3, font_title)
+        elif level == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode once 
+                          # The boss has been beaten.
+            draw_box_with_text(window_surface, 
+                "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
+                0, window_height/3, window_width, window_height/3,font_title)
+            limitless = True 
+            
+        # We here then draw all of the ennemies according to their levels. 
         elif level == 1 :
             for a in asteroids : 
                 window_surface.blit(a['surface'], a['rect'])
@@ -472,14 +518,10 @@ while True :
                 window_surface.blit(a['surface'], a['rect'])
             for a in helpers : 
                 window_surface.blit(a['surface'], a['rect'])
+            # We here draw a boss bar. 
             BossShip.DrawBossBar(window_surface, boss, window_width/2, 0)
             draw_title("Alien Boss", font, window_surface, window_width/2, 20)
             draw_text('Helpers Used : %s /1' % (helper_check), font, window_surface, 10, 120)
-        elif level == 5 : # This allows for the player to choose if he wants to stop or enter limitless mode.
-            draw_box_with_text(window_surface, 
-                "Congrats, You've beaten the boss ! You can either stop now (ESC) or start our infinite mode to set a high score ! (RETURN)", 
-                0, window_height/3, window_width, window_height/3,font_title)
-            limitless = True 
         elif level == 6 or level == "PAUSE": 
             for a in asteroids : 
                 window_surface.blit(a['surface'], a['rect'])
@@ -490,7 +532,7 @@ while True :
             for a in mean_bullets : 
                 window_surface.blit(a['surface'], a['rect'])
             
-        # Drawing the Bullets 
+        # Drawing the Bullets. This is out of the conditions because it will happen at every single level. 
         for a in bullets : 
             window_surface.blit(a['surface'], a['rect'])
 

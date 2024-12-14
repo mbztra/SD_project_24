@@ -25,16 +25,23 @@ facing = "left"
 # However, they all have specificities that I'll be commenting on. 
 
 class Asteroids : 
+
+    # We start by defining the size and speed range of our ennemies. 
     asteroids_min_size = 20
     asteroids_max_size = 80
     asteroids_min_speed = 2  
     asteroids_max_speed = 8
 
+    # We then make  a method to create the ennemies. It takes the list of our ennemy, make a new dictionnary for the 
+    # ennemy. We give it all it's characteristics (eg size, speed, spawn, image, etc.) and we add it to the list. 
     def CreateNewAsteroids(a_list) : 
         asteroids_size = random.randint(Asteroids.asteroids_min_size, Asteroids.asteroids_max_size)
         newAsteroid = {'rect': pygame.Rect(random.randint(0, window_width - asteroids_size), 0 - asteroids_size, asteroids_size, asteroids_size), 'speed': random.randint(Asteroids.asteroids_min_speed, Asteroids.asteroids_max_speed), 'surface':pygame.transform.scale(AsteroidImage, (asteroids_size, asteroids_size)), 'behaviour' : random.randint(1,5)}
         
-        # This makes so that the asteroids can go diagonal, and that their image will switch directions accordingly
+        # Here is a special feature of the asteroids. They have a characteristic called "behaviour".
+        # There is 1/5 chance they are "deviant" and will not go down, but diagonal.
+        # We then check if the ennemy spawned on the left or right side, and make it go in the correct direction, and 
+        # give them the correct image to their facing.
         if newAsteroid['behaviour'] == 5 : 
             if newAsteroid['rect'].x > window_width/2 : 
                 newAsteroid['facing'] = "left"
@@ -47,6 +54,7 @@ class Asteroids :
         a_list.append(newAsteroid)
         return a_list
 
+    # This is used to move the ennemies. It takes their position and adds their speed (only Y or X and Y for the deviant)
     def MoveAsteroids (a_list2) :
         for a in a_list2:
             if a['behaviour'] < 5 : 
@@ -57,13 +65,14 @@ class Asteroids :
                 a['rect'].move_ip(-a['speed'], a['speed'])
         return a_list2
     
+    # Method used to delete the asteroids when it gets to the bottom of the screen. 
     def DeleteAsteroids(asteroids_list2) :
         for a in asteroids_list2[:] :
             if a['rect'].top > window_height:
                 asteroids_list2.remove(a)
         return asteroids_list2
     
-
+    # Method to check if the player has hit the asteroids. 
     def playerHasHitAsteroids(playerRect, asteroids):
         for a in asteroids:
             if playerRect.colliderect(a['rect']):
@@ -110,12 +119,13 @@ class Space_Drones :
     space_drones_max_hor_speed = 4
 
     def CreateNewSpaceDrones(a_list) : 
+        # Here the space drones have both a vertical and horizontal speed. 
         SpaceDrones_size = random.randint(Space_Drones.space_drones_min_size, Space_Drones.space_drones_max_size)
         newSpaceDrone = {'rect': pygame.Rect(random.randint(0, window_width - SpaceDrones_size), 0 - SpaceDrones_size, SpaceDrones_size, SpaceDrones_size), 'speed': random.randint(Space_Drones.space_drones_min_speed, Space_Drones.space_drones_max_speed), 'horizontal_speed' : random.randint(Space_Drones.space_drones_min_hor_speed, Space_Drones.space_drones_max_hor_speed), 'surface':pygame.transform.scale(SpaceDroneImage, (SpaceDrones_size, SpaceDrones_size)),}
         a_list.append(newSpaceDrone)
         return a_list
     
-    # This function allows our Level 2 Ennemies to be "intelligent" (AKA, they try to reach the player)
+    # This function allows our Level 2 Ennemies to be "intelligent" (AKA, if they're not at the same X coordinate, they will try and reach it) 
     def MoveSpaceDronesToPlayer (playerRect, a_list2) : 
         for a in a_list2 : 
             if playerRect.centerx > a['rect'].x : 
@@ -148,6 +158,10 @@ class Alien_Fighters :
     def CreateNewFighter(a_list) : 
         Fighter_size = random.randint(Alien_Fighters.fighters_min_size, Alien_Fighters.fighters_max_size)
         newFighter = {'rect': pygame.Rect(random.randint(0, window_width - Fighter_size), 0 - Fighter_size, Fighter_size, Fighter_size), 'speed': random.randint(Alien_Fighters.fighters_min_speed, Alien_Fighters.fighters_max_speed), 'surface':pygame.transform.scale(AlienFighterImage, (Fighter_size, Fighter_size)),}
+        
+        # As these ennemies only move diagonnaly, i assign them a direction regarding where they spawn, like the 
+        # deviant behaviours asteroids seen before. This will allow them to go in the opposite side 
+        # of the screen, rather than going diagonal in the same direction they are, which makes them disappear too fast.
         if newFighter['rect'].x > window_width/2 : 
                 newFighter['facing'] = "left"
         elif newFighter['rect'].x < window_width/2 : 
@@ -157,8 +171,7 @@ class Alien_Fighters :
         a_list.append(newFighter)
         return a_list
     
-    # Our Level 3 ennemies, like the asteroids, need a "facing". This will allow them to go in the opposite side 
-    # of the screen, rather than going diagonal in the same direction they are, which makes them disappear too fast. 
+    # We then move them diagonnaly, adding their speed on their X and Y coordinates. 
     def MoveFighter (a_list2) :
         for a in a_list2:
             if a['facing'] == "right":
@@ -207,11 +220,13 @@ class BossShip() :
         print(window_width)
         return a_list
     
+    # This allows the boss to slide down from the top of screen when arriving, rather than making it pop out of the blue.
     def MoveBoss (a_list2) :
         for a in a_list2:
             a['rect'].move_ip(0, a['speed'])
         return a_list2
     
+    # These next two methods are used for the boss to move left and right in the borders of the screen. 
     def MoveBossRight (list2) : 
         for a in list2 : 
             a['rect'].move_ip(a['speed']/8, 0)
@@ -222,6 +237,7 @@ class BossShip() :
             a['rect'].move_ip(-a['speed']/8, 0)
         return list2
     
+    # This is used to know what direction the boss should move, i it touches the side of the screen. it changes. 
     def CheckFacing (list, facing) : 
         for a in list : 
             if a['rect'].x < 0 : 
@@ -242,6 +258,7 @@ class BossShip() :
                 return True
         return False
     
+    # This is used to draw a health bar, to be able to keep track on how we're doing on the boss. 
     def DrawBossBar(screen, list, x, y) :
         current_bar_width =  list[0]['life']*2
         bar_height = 40
@@ -251,11 +268,14 @@ class BossShip() :
         # Draw the bar outline 
         pygame.draw.rect(screen, (255,255,255), (x_pos, y, bar_width, bar_height), 2)
     
+# These are the allies vessels that come to help us during the boss fight. They can be called once by bossfight, and
+# Will follow the boss aorund and shoot at it for 10 seconds. 
 class Helpers() : 
     helpers_size = 50
     helpers_speed = -4 
     x_spawn = [window_width/2 - 100, window_width/2 + 100]
 
+    # Here the spawn of the helpers is defined by where the boss is at the moment of the call. 
     def CallForHelpers(a_list, boss, facing) : 
         for a in boss : 
             x_pos = a['rect'].x 
@@ -267,11 +287,13 @@ class Helpers() :
         a_list.append(newHelper)
         return a_list 
     
+    #This method is used to move the helpers vertically from the bottom of the screen to not have the "popping out of nowhere" effect, just as the boss does. 
     def MoveHelpers(a_list) : 
         for a in a_list : 
             a['rect'].move_ip(0, a['speed'])
         return a_list
     
+    # These next two methods are used to move the helpers the same way the boss does left and right. 
     def MoveHelpersRight(list, boss) : 
         for a in boss : 
             speed = a['speed']
@@ -301,6 +323,8 @@ class Bullets :
         Bullet_size = Bullets.bullet_size
         Bullet_speed = Bullets.bullet_speed
         newBullet = {'rect': pygame.Rect(playerRect.centerx - 15, (playerRect.centery - 30), Bullet_size, Bullet_size), 'speed': Bullet_speed, 'surface':pygame.transform.scale(BulletImage, (Bullet_size, Bullet_size)),}
+        
+        # This is used to change the colour of the bullets if they are used by the helpers rather than us.
         if boolean : 
             newBullet['surface'] = pygame.transform.scale(HelperBulletImage, (Bullet_size, Bullet_size))
         a_list.append(newBullet)
@@ -318,7 +342,7 @@ class Bullets :
         return bullet_list2
 
 
-    
+    # These next methods are used to check if the bullet has touched an ennemy and to destroy it. 
     def BulletHasHitAsteroids(bullets, asteroids, score, LEVEL) :
         for a in asteroids :
             for b in bullets : 
@@ -366,6 +390,8 @@ class Bullets :
                         score = 5000
         return bullets, fighters, score
     
+    # Here, if a bullet touches the boss, it will decrease it's health by one, and if the life of the boss is empty, 
+    # Then it will kill it and push the level to the "end of game level" (aka level 5)
     def BulletHasHitBoss(bullets, boss, score, LEVEL, boss_dead):
         for a in boss :
             for b in bullets : 
@@ -381,6 +407,8 @@ class Bullets :
                         score += 3000
         return bullets, boss, score, LEVEL, boss_dead
     
+    # If I'm being honnest, I don't know why this function doesn't work correctly, but the boss missiles need two hits 
+    # to be destroyed. In terms of game design it is cool, so I didn't try to fix it. 
     def BulletHasHitBomb(bullets, boss_missiles,):
         for a in boss_missiles :
             for b in bullets : 
@@ -470,7 +498,7 @@ class BossBullets :
 # They can spawn from two different points on the boss, detailed in x_spawn. 
 # When created, they need a "facing" to tell them on which side they get shot from. 
 # I did it this way to be able to alternate the spawn points in the main loop.
-# They can be destroyed by the players bullets. 
+# They can be destroyed by the players bullets with two hits
 class BossBombs : 
     bomb_size = 50
     bomb_speed = 2
